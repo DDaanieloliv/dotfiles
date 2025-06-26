@@ -157,14 +157,14 @@
     ];
   };
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.hack
-    nerd-fonts.jetbrains-mono
-
-    # Font Awesome para ícones específicos
-    font-awesome
-  ];
+ #fonts.packages = with pkgs; [
+ #  nerd-fonts.fira-code
+ #  nerd-fonts.hack
+ #  nerd-fonts.jetbrains-mono
+ #
+ #  # Font Awesome para ícones específicos
+ #  font-awesome
+ #];
 
   # Install firefox.
   programs.firefox.enable = true;

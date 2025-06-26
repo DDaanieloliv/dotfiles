@@ -56,26 +56,26 @@
     '';
   };
 
-    programs.tmux = {
+  programs.tmux = {
     enable = true;
     extraConfig = ''
-      set -g mouse on
+set -g mouse on
 
-      set -g window-status-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
-      set -g window-status-current-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+set -g window-status-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+set -g window-status-current-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
 
-      set -g status-left "#[bg=default, fg=#141414]\uE0B6#[fg=white,bg=#141414]#S #[bg=green,fg=black] #[bg=default,fg=green]\uE0B4  "
+set -g status-left "#[bg=default, fg=#141414]\uE0B6#[fg=white,bg=#141414]#S #[bg=green,fg=black] #[bg=default,fg=green]\uE0B4  "
 
 
-      #set-option -g status-justify centre
-      set-option -g status-position top
-      set-option -g status-left-length 100
-      set-option -g status-right-length 100
-      set-option -g status-right-style bg=default,fg=white
-      set-option -g status-left-style bg=default,fg=white
-      set -g status-style bg=default,fg=white
+#set-option -g status-justify centre
+set-option -g status-position top
+set-option -g status-left-length 100
+set-option -g status-right-length 100
+set-option -g status-right-style bg=default,fg=white
+set-option -g status-left-style bg=default,fg=white
+set -g status-style bg=default,fg=white
 
-      set -g status-right "#[bg=default,fg=#141414]\uE0B6#[fg=white,bg=#141414]#{pane_current_path} #[bg=colour223,fg=black]  #[bg=default,fg=colour223]\uE0B4      #[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white]%a #[bg=blue,fg=blue].#[bg=blue,fg=black]󰸘#[bg=blue,fg=blue].#[fg=blue bg=default]\uE0B4  #[bg=default,fg=#141414]\uE0B6#[bg=#141414, fg=white]%H:%M #[bg=blue, fg=black] 󰃰 #[bg=default,fg=blue]\uE0B4"
+set -g status-right "#[bg=default,fg=#141414]\uE0B6#[fg=white,bg=#141414]#{pane_current_path} #[bg=colour223,fg=black]  #[bg=default,fg=colour223]\uE0B4      #[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white]%a #[bg=blue,fg=blue].#[bg=blue,fg=black]󰸘#[bg=blue,fg=blue].#[fg=blue bg=default]\uE0B4  #[bg=default,fg=#141414]\uE0B6#[bg=#141414, fg=white]%H:%M #[bg=blue, fg=black] 󰃰 #[bg=default,fg=blue]\uE0B4"
 
 
 
@@ -108,27 +108,47 @@
     };
   };
 
+  fonts.fontconfig.enable = true;  # Habilita o gerenciamento de fontes
+
+  home.packages = with pkgs; [
+    # Nerd Fonts individuais
+    nerd-fonts.fira-code
+    nerd-fonts.hack
+    nerd-fonts.jetbrains-mono
+
+    # Outras fontes e pacotes
+    font-awesome
+    noto-fonts
+    noto-fonts-emoji
+    htop
+  ];
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
-    pkgs.htop
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+ #home.packages = [
+   # Nerd Fonts (com ícones para terminal/IDE)
+ #  (nerdfonts.override { fonts = [ "FiraCode" "Hack" "JetBrainsMono" ]; })
+   # Font Awesome e outras
+ #  font-awesome
+ #  noto-fonts
+ #  noto-fonts-emoji
+ #  pkgs.htop
+   # # Adds the 'hello' command to your environment. It prints a friendly
+   # # "Hello, world!" when run.
+   # pkgs.hello
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+   # # It is sometimes useful to fine-tune packages, for example, by applying
+   # # overrides. You can do that directly here, just don't forget the
+   # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+   # # fonts?
+   # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-  ];
+   # # You can also create simple shell scripts directly inside your
+   # # configuration. For example, this adds a command 'my-hello' to your
+   # # environment:
+   # (pkgs.writeShellScriptBin "my-hello" ''
+   #   echo "Hello, ${config.home.username}!"
+   # '')
+ #];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
