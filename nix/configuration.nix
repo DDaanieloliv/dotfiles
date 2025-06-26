@@ -14,7 +14,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      # (import "${home-manager}/nixos") 
+      # (import "${home-manager}/nixos")
     ];
 
 # home-manager = {
@@ -77,8 +77,8 @@
     windowManager.qtile = {
       enable = true;
       extraPackages = python3Packages: with python3Packages; [
-	qtile-extras
-    	pygobject3  # Para suporte a ícones
+        qtile-extras
+        pygobject3  # Para suporte a ícones
       ];
     };
     displayManager.sessionCommands = ''
@@ -109,7 +109,7 @@
   # Enable SDDM instead GDM.
   # services.xserver.displayManager.sddm.enable = true;
 
-  # Enable grafic drives to 'picon'. 
+  # Enable grafic drives to 'picon'.
   # hardware.opengl.enable = true;
   hardware.graphics.enable = true;
 
@@ -161,9 +161,9 @@
     nerd-fonts.fira-code
     nerd-fonts.hack
     nerd-fonts.jetbrains-mono
-    
+
     # Font Awesome para ícones específicos
-    font-awesome  
+    font-awesome
   ];
 
   # Install firefox.
@@ -177,10 +177,15 @@
     shadow = true;
     vSync = true;
     settings = {
-      corner-radius = 12;  # Tamanho do arredondamento (em pixels)
-      rounded-corners-exclude = [
-      "class_g = 'Polybar'"  # Exclua elementos que não devem ser arredondados
-      ];
+     #corner-radius = 12;  # Tamanho do arredondamento (em pixels)
+     #rounded-corners-exclude = [
+     #"class_g = 'Polybar'"  # Exclua elementos que não devem ser arredondados
+     #"class_g = 'Dunst'"       # Notificações
+     #"class_g = 'Rofi'"        # Lançador de aplicativos
+     #"class_g = 'peek'"        # Gravador de tela
+     #"name *= 'rectangular'"   # Qualquer janela com "rectangular" no nome
+     #"class_g = 'qtile'"
+     #];
       shadow-radius = 12;
       shadow-offset-x = -12;
       shadow-offset-y = -12;
@@ -197,7 +202,7 @@
 
   # Install hyprland.
   # programs.hyprland.enable = true;
-  
+
 
   # Globally install the Flatpack service.
   services.flatpak.enable = true;
@@ -214,17 +219,16 @@
     alacritty
     neofetch
     pfetch
-    tmux
     tree
     xwallpaper
     pcmanfm
     rofi
     pulseaudio
     mesa-demos
-    pciutils      # fornece lspci 
+    pciutils      # fornece lspci
     systemd
     cava
-  ]; 
+  ];
 
   services.openssh = {
     enable = true;
