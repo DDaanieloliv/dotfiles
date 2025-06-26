@@ -56,6 +56,32 @@
     '';
   };
 
+    programs.tmux = {
+    enable = true;
+    extraConfig = ''
+      set -g mouse on
+
+      set -g window-status-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+      set -g window-status-current-format "#[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white] #W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+
+      set -g status-left "#[bg=default, fg=#141414]\uE0B6#[fg=white,bg=#141414]#S #[bg=green,fg=black] #[bg=default,fg=green]\uE0B4  "
+
+
+      #set-option -g status-justify centre
+      set-option -g status-position top
+      set-option -g status-left-length 100
+      set-option -g status-right-length 100
+      set-option -g status-right-style bg=default,fg=white
+      set-option -g status-left-style bg=default,fg=white
+      set -g status-style bg=default,fg=white
+
+      set -g status-right "#[bg=default,fg=#141414]\uE0B6#[fg=white,bg=#141414]#{pane_current_path} #[bg=colour223,fg=black]  #[bg=default,fg=colour223]\uE0B4      #[bg=default,fg=#141414]\uE0B6#[bg=#141414,fg=white]%a #[bg=blue,fg=blue].#[bg=blue,fg=black]󰸘#[bg=blue,fg=blue].#[fg=blue bg=default]\uE0B4  #[bg=default,fg=#141414]\uE0B6#[bg=#141414, fg=white]%H:%M #[bg=blue, fg=black] 󰃰 #[bg=default,fg=blue]\uE0B4"
+
+
+
+    '';
+  };
+
   programs.git = {
     enable = true;
     userName = "ddaaniel";
