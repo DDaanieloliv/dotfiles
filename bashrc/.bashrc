@@ -26,12 +26,12 @@ if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
 fi
 
 # ~/.bashrc ou ~/.bash_profile
-if command -v tmux >/dev/null 2>&1; then
-  # Só executa se for uma shell interativa e estiver em terminal real (evita problemas com VSCode, etc)
-  if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
-    tmux attach -t main || tmux new -s main
-  fi
-fi
+#  if command -v tmux >/dev/null 2>&1; then
+#   # Só executa se for uma shell interativa e estiver em terminal real (evita problemas com VSCode, etc)
+#   if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
+#      tmux attach -t main || tmux new -s main
+#   fi
+# fi
 
 
 if [ -f "/etc/profiles/per-user/daniel/etc/profile.d/hm-session-vars.sh" ]; then
