@@ -18,7 +18,7 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-      btw = "echo I_use 󱄅 BTW󰇳 ";
+      btw = "echo I_use 󱄅 BTW";
     };
     initExtra = ''
 
