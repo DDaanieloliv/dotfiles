@@ -18,11 +18,15 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-      btw = "echo I_use_󱄅__BTW󰇳";
+      btw = "echo I_use 󱄅 BTW󰇳 ";
     };
     initExtra = ''
 
       # 󱈸󰋖
+
+      if [ -f "$HOME/.cargo/env" ]; then
+        source "$HOME/.cargo/env"
+      fi
 
       if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
         export SDKMAN_DIR="$HOME/.sdkman"
@@ -97,15 +101,16 @@
     extraConfig = ''
 
       # Configuração de cores e terminal
-      set -g default-terminal "tmux-256color"
+      #set -g default-terminal "tmux-256color"
       set -ga terminal-overrides ",xterm-256color:RGB"
       set -ga terminal-overrides ",alacritty:RGB"
       set -ga terminal-overrides ",xterm-kitty:RGB"
       set -ga terminal-overrides ",gnome*:RGB"
     
       # Melhores binds para splits
+      unbind |
       bind -n C-\\ split-window -h -c "#{pane_current_path}"
-      bind -n C-v split-window -v -c "#{pane_current_path}"
+      bind -n C-] split-window -v -c "#{pane_current_path}"
       bind -n C-t new-window -c "#{pane_current_path}"
       bind -n C-x kill-pane
 
@@ -116,6 +121,8 @@
       bind -n C-k select-pane -U
       bind -n C-l select-pane -R
     
+      bind-key -n C-p previous-window
+      bind-key -n C-n next-window
 
       bind -n C-S-Left resize-pane -L 1   # Move 3 colunas para esquerda
       bind -n C-S-Right resize-pane -R 1  # Move 3 colunas para direita
@@ -126,7 +133,7 @@
       set -g set-clipboard on
 
       set -g window-status-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
-      set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+      set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=#edb9b9, fg=black] #I#[bg=default,fg=#edb9b9]\uE0B4 "       # Oculta janelas inativas
 
 
 
@@ -143,7 +150,7 @@
       set-option -g status-left-style bg=default,fg=white
       set -g status-style bg=default,fg=white
 
-      set -g status-right "#[bg=default,fg=#f77ee5]\uE0B6#[bg=#f77ee5,fg=black] #[fg=white,bg=#342838] #(short-path #{pane_current_path})#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue,fg=black]󰸘 #[bg=#342838,fg=white] %a#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue, fg=black]󰃰 #[bg=#342838, fg=white] %H:%M#[bg=default,fg=#342838]\uE0B4"
+      set -g status-right "#[bg=default,fg=#f77ee5]\uE0B6#[bg=#f77ee5,fg=black] #[fg=white,bg=#342838] #(short-path #{pane_current_path})#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue,fg=black]󰸘 #[bg=#342838,fg=white] %d#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue, fg=black]󰃰 #[bg=#342838, fg=white] %H:%M#[bg=default,fg=#342838]\uE0B4"
 
 
     '';
@@ -196,14 +203,15 @@
     font-awesome
     noto-fonts
     noto-fonts-emoji
-    htop
-    pfetch
-    neofetch
+     
     mesa # Já inclui OpenGL e Vulkan
     libva-utils # Para vainfo 
+    htop
     cava
+    tree
 
-     (pkgs.writeShellScriptBin "short-path" ''
+
+    (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
       home="$HOME"
 
@@ -344,10 +352,8 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
-    JAVA_HOME = "${pkgs.jdk17}/lib/openjdk";
   };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
-
