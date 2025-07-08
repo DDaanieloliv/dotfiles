@@ -11,14 +11,23 @@
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # hardware.opengl.enable = true;
-  # hardware.opengl.driSupport = true;
-  # hardware.opengl.driSupport32Bit = true;
-
-  networking.hostName = "btw"; # Define your hostname.
+  #boot.loader.systemd-boot.enable = true;
+  #boot.loader.efi.canTouchEfiVariables = true;
+  
+  boot.loader = {
+    grub = {
+      enable = true;
+      efiSupport = true;
+      device = "nodev";
+      useOSProber = false;
+    };
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot/efi";
+    };
+  };
+ 
+  networking.hostName = "nixbtw"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
@@ -33,17 +42,17 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "pt_BR.UTF-8";
   console = {
-  #  font = "Lat2-Terminus16";
+  #   font = "Lat2-Terminus16";
     keyMap = "br-abnt2";
-  #  useXkbConfig = true; # use xkb.options in tty.
+  #   useXkbConfig = true; # use xkb.options in tty.
   };
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
-  # services.displayManager.sddm.wayland.enable = true;
   programs.hyprland.enable = true;
   
+
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
@@ -56,24 +65,13 @@
   # OR
   services.pipewire = {
     enable = true;
-    audio.enable = true; 
-    wireplumber.enable = true;
     pulse.enable = true;
+    audio.enable = true;
+    wireplumber.enable = true;
   };
-  
+
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-  # services.libinput = {
-  #   enable = true;
-  #   touchpad = {
-  #     naturalScrolling = true;
-  #     # tappin = true;
-  #     disableWhileTyping = true;
-  #     accelProfile = "adaptive";
-  #     scrollMethod = "twofingers";
-  #   };
-  # };
-  
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.daniel = {
@@ -84,6 +82,20 @@
     ];
   };
 
+  programs.firefox.enable = true;
+
+  # List packages installed in system profile.
+  # You can use https://search.nixos.org/ to find more packages (and options).
+  environment.systemPackages = with pkgs; [
+    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    wget
+    neovim
+    kitty
+    hyprland
+    xdg-user-dirs
+    neofetch
+    swww
+  ];
   
   fonts.packages = with pkgs; [
     noto-fonts
@@ -93,28 +105,6 @@
     dejavu_fonts
   ];
 
-  programs.firefox.enable = true;
-
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
-  environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    # wget
-    kitty
-    neovim
-    hyprland 
-    xdg-user-dirs
-    btop
-    neofetch
-    swww
-  ];
-  
-  # Active the Support to the Wayland on system.
-  # environment.variables = {
-  #   WLR_NO_HARDWARE_CURSORS = "1";
-  # };
-
-  # Active the Support to the Wayland on system.
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
