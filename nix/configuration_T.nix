@@ -95,6 +95,8 @@
     xdg-user-dirs
     neofetch
     swww
+    wofi
+    kdePackages.dolphin
   ];
   
   fonts.packages = with pkgs; [
