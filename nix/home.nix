@@ -209,7 +209,7 @@
     htop
     cava
     tree
-
+    lm_sensors
 
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"

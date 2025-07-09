@@ -50,8 +50,20 @@
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
+  # Enable WM / "DE" hyperland.
   programs.hyprland.enable = true;
   
+  # Enable Supergfxctl for ASUS laptops.
+  services.supergfxd.enable = true;
+
+  # Enable asusctl and ROG Control Center.
+  services = {
+    asusd = {
+      enable = true;
+      enableUserService = true;
+    };
+  };
+
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
