@@ -18,14 +18,14 @@ window#waybar.hidden {
     opacity: 0.2;
 }
 
-/*
+
 window#waybar.empty {
     background-color: transparent;
 }
 window#waybar.solo {
     background-color: #FFFFFF;
 }
-*/
+
 
 window#waybar.termite {
     background-color: #3F3F3F;
@@ -34,6 +34,16 @@ window#waybar.termite {
 window#waybar.chromium {
     background-color: #000000;
     border: none;
+}
+
+#custom-power {
+    background-color: #b31218 /* #e00d14 */;
+    color: #d4babb;
+    margin-bottom: 14px;
+}
+
+#custom-power:hover {
+    background-color: #7E7D73;
 }
 
 button {
@@ -52,7 +62,7 @@ button:hover {
 
 /* you can set a style on hover for any module like this */
 #pulseaudio:hover {
-    background-color: #a37800;
+    background-color: #7E7D73;
 }
 
 #workspaces {
@@ -117,11 +127,13 @@ button:hover {
     padding: 0 10px;
     color: #ffffff;
     margin: 0 3px;
+    margin-bottom: 14px;
 }
 
 #window,
 #workspaces {
-    margin: 0 4px;
+    margin: 0 10px;
+    margin-bottom: 14px;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -136,11 +148,13 @@ button:hover {
 
 #clock {
     background-color: #64727D;
+    margin-bottom: 14px;
 }
 
 #battery {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #3C494F;
+    color: #ffffff;
+    margin-bottom: 14px;
 }
 
 #battery.charging, #battery.plugged {
@@ -186,7 +200,7 @@ button:hover {
 }
 
 label:focus {
-    background-color: #000000;
+    background-color: #323d49;
 }
 
 #cpu {
@@ -203,11 +217,12 @@ label:focus {
 }
 
 #backlight {
-    background-color: #90b1b1;
+    background-color: #3C494F;
+    margin-bottom: 14px;
 }
 
 #network {
-    background-color: #2980b9;
+    background-color: #3C494F;
 }
 
 #network.disconnected {
@@ -215,8 +230,9 @@ label:focus {
 }
 
 #pulseaudio {
-    background-color: #f1c40f;
-    color: #000000;
+    background-color: #3C494F;
+    color: #ffffff;
+    margin-bottom: 14px;
 }
 
 #pulseaudio.muted {
@@ -234,8 +250,8 @@ label:focus {
 }
 
 #custom-media {
-    background-color: #66cc99;
-    color: #2a5c45;
+    background-color: #3C494F /* #66cc99 */;
+    color: #66b08e /* #2a5c45 */;
     min-width: 100px;
     padding-top: 3px;
 }

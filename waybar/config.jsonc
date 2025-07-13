@@ -2,7 +2,7 @@
 {
     // "layer": "top", // Waybar at top layer
     // "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 30, // Waybar height (to be removed for auto height)
+    "height": 35, // Waybar height (to be removed for auto height)
     "width": 1490, // Waybar width
     "margin-top": 5,
     "margin-bottom": -20,
@@ -197,6 +197,7 @@
         "format": "{icon} {text}",
         "return-type": "json",
         "max-length": 40,
+        "interval": 1, // atualiza a cada 2 segundos
         "format-icons": {
             "spotify": "",
             "default": "🎜"
@@ -206,5 +207,11 @@
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
 	//
 	// To the applet works you should use that command 'chmod +x ~/.config/waybar/mediaplayer.py', to turn mediaplayer.py executable. And also have 'playerctl' and 'Python3'.
+    },
+    "custom/power": {
+        "format": " ⏻ ",
+        "tooltip": false,
+        "on-click": "/home/daniel/.config/waybar/scripts/powermenu.sh"
     }
+
 }
