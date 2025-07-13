@@ -1,12 +1,14 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    font-family: 'SF Pro Text', 'JetBrainsMono Nerd Font Propo', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 10px;
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.9);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
+    background-color: rgba(43, 48, 59, 0);
+/*  border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
     color: #ffffff;
     transition-property: background-color;
     transition-duration: .5s;
@@ -53,10 +55,16 @@ button:hover {
     background-color: #a37800;
 }
 
+#workspaces {
+    background-color: #323d49;
+}
+
 #workspaces button {
-    padding: 0 5px;
+    border-radius: 6px;
+    transition: 0.2s ease-in-out;
+    padding: 0 7px;
     background-color: transparent;
-    color: #ffffff;
+    color: #6cbde9;
 }
 
 #workspaces button:hover {
@@ -70,6 +78,18 @@ button:hover {
 
 #workspaces button.urgent {
     background-color: #eb4d4b;
+}
+
+#workspaces button.active {
+    background-color: #6cbde9;
+    color: #323d49;
+}
+#workspaces button.empty {
+    color: #e8eaed;
+}
+#workspaces button.empty.active {
+    background-color: #6cbde9;
+    color: #323d49;
 }
 
 #mode {
@@ -96,6 +116,7 @@ button:hover {
 #mpd {
     padding: 0 10px;
     color: #ffffff;
+    margin: 0 3px;
 }
 
 #window,
@@ -216,6 +237,7 @@ label:focus {
     background-color: #66cc99;
     color: #2a5c45;
     min-width: 100px;
+    padding-top: 3px;
 }
 
 #custom-media.custom-spotify {
