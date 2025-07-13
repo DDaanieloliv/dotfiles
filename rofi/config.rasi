@@ -140,7 +140,7 @@ textbox-prompt-colon {
 }
 entry {
     enabled:                     true;
-    padding:                     0px 2px 0px 18px;
+    padding:                     0px 2px -2px 18px;
     expand:                      false;
     width:                       14em;
 
