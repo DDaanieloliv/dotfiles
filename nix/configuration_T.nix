@@ -96,6 +96,7 @@
 
   programs.firefox.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
@@ -114,6 +115,7 @@
     playerctl
     python3
     peaclock
+    nvtopPackages.intel
   ];
   
   fonts.packages = with pkgs; [
