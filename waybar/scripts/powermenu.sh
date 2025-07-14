@@ -1,4 +1,4 @@
-# ~/.config/waybar/scripts/powermenu.sh - Should be Excutable. To this use that command 'chmod +x ~/.config/waybar/scripts/powermenu.sh'.
+# ~/.config/waybar/scripts/powermenu.sh
 #!/usr/bin/env bash
 
 chosen=$(echo -e "⏻\n\n\n \n\n" | \
@@ -12,3 +12,4 @@ case "$chosen" in
   "") loginctl lock-session ;;
   *) exit 0 ;;
 esac
+
