@@ -107,8 +107,13 @@
     xdg-user-dirs
     neofetch
     swww
-    wofi
+    rofi-wayland
+    waybar
     kdePackages.dolphin
+    jetbrains.idea-community 
+    playerctl
+    python3
+    peaclock
   ];
   
   fonts.packages = with pkgs; [
@@ -118,6 +123,10 @@
     liberation_ttf
     dejavu_fonts
   ];
+
+  environment.variables = {
+  };
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
