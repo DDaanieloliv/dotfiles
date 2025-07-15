@@ -82,13 +82,13 @@
 
 
 
-     if [[ $EUID -eq 0 ]]; then
-       # Prompt especial para root
-       export PS1="\n\n\[$(tput bold)\]\[\033[38;2;255;85;85m\]/ root in \[$(tput sgr0)\]\[\033[38;2;255;255;255m\]\$(_format_dir)\[$(tput sgr0)\]\n\[$(tput bold)\]\[\033[38;2;255;85;85m\]#\[$(tput sgr0)\] "
-     else
-       # Prompt padrão para usuário normal
-       export PS1="\n\n\[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\$(get_git_info)\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
-     fi
+      if [[ $EUID -eq 0 ]]; then
+        # Prompt especial para root (com formatação igual ao usuário comum)
+        export PS1="\n\n\[$(tput bold)\]\[\033[38;2;220;124;126m\]root\[$(tput sgr0)\] in \[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
+      else
+        # Prompt padrão para usuário normal
+        export PS1="\n\n\[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\$(get_git_info)\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
+      fi
 
     '';
   };
