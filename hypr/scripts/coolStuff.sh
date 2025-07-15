@@ -2,4 +2,4 @@
 
 ~/.config/hypr/scripts/peaclock.sh
 
-~/.config/hypr/scripts/nvtop.sh
+~/.config/hypr/scripts/fetch.sh
