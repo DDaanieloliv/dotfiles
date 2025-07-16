@@ -39,7 +39,7 @@ window {
     border-radius:               20px;
     border-color:                @selected;
     cursor:                      "default";
-    background-color:            #696628;
+    background-color:            #020202;
 /*    background-color:            #323d49; */
     border:                      0.5px solid;
     border-color:                #000000;
@@ -176,3 +176,4 @@ element selected.normal {
     background-color:            var(selected);
     text-color:                  var(background);
 }
+
