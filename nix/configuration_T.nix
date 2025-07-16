@@ -116,6 +116,11 @@
     python3
     peaclock
     nvtopPackages.intel
+    jdk17
+    unzip
+    gcc
+    eww
+    hyprpicker
   ];
   
   fonts.packages = with pkgs; [
@@ -174,3 +179,4 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
+

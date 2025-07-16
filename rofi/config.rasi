@@ -148,7 +148,7 @@ entry {
     border:                      1px;
     border-color:                #3c4752;
     background-color:            #332d3d;
-    margin:                      10px 4px 11px 10px;
+    margin:                      10px 4px 10px 10px;
     border-radius:               4px;
 
     text-color:                  inherit;

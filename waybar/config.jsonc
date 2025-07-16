@@ -9,13 +9,14 @@
     "spacing": 4, // Gaps between modules (4px)
     // Choose the order of the modules
     "modules-left": [
-        "custom/power",
+        "hyprland/workspaces",
+//      "custom/power",
         "custom/media",
         "network"
     ],
     "modules-center": [
-        "sway/window",
-        "hyprland/workspaces"
+        "sway/window"
+//      "hyprland/workspaces"
     ],
     "modules-right": [
         "mpd",
@@ -31,6 +32,7 @@
         "battery",
         "battery#bat2",
         "clock",
+        "custom/power",
         "tray"
     ],
     // Modules configuration
