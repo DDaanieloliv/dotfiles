@@ -19,6 +19,7 @@
     enable = true;
     shellAliases = {
       btw = "echo I_use 󱄅 BTW";
+      vim = "nvim";
     };
     initExtra = ''
 
@@ -221,6 +222,9 @@
     htop
     cava
     tree
+    nitch
+    ripgrep
+    lua-language-server
     lm_sensors
 
     (pkgs.writeShellScriptBin "short-path" ''
@@ -290,7 +294,8 @@
     ".config/kitty/kitty.conf".text = ''
        term xterm-256color 
 
-       background #090f14
+       # #1B1C26 #090f14
+       background #1a1b26
        background_opacity 0.95
        
        # Frappé Color Scheme for Kitty Terminal
