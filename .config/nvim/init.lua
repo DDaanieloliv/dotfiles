@@ -1,3 +1,5 @@
+
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -103,10 +105,15 @@ require("lazy").setup({
     -- ##                           ##
     -- ###############################
 
+    -- Substitua sua configuração atual do Harpoon por:
     {
-      "ThePrimeagen/harpoon"
+      "ThePrimeagen/harpoon",
+      branch = "harpoon2",
+      dependencies = { "nvim-lua/plenary.nvim" },
+      config = function()
+        require("harpoon").setup({})
+      end
     },
-
     -- ###############################
     -- ##                           ##
     -- ## Plugin about UndoTree.    ##
@@ -247,21 +254,124 @@ require("lazy").setup({
   checker = { enabled = true },
 })
 
--- Setting a nvim colorscheme.
+
+-- #############################
+-- ##                         ##
+-- ## About NeoVim options !  ##
+-- ##                         ##
+-- #############################
+
 vim.cmd [[colorscheme tokyonight-night]]
 
--- Setting vim options.
+-- Basic settings
 vim.o.relativenumber = true
 vim.o.number = true -- Isso DESATIVA completamente os números de linha
 vim.g.have_nerd_font = true
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
+vim.opt.scrolloff = 10
+vim.opt.sidescrolloff = 8
+
+-- Identation
 vim.opt.tabstop = 2      -- Número de espaços que um <Tab> representa
 vim.opt.shiftwidth = 2   -- Número de espaços para indentação automática
+vim.opt.softtabstop = 2
 vim.opt.expandtab = true -- Converte tabs em espaços
-vim.o.ignorecase = true
-vim.o.smartcase = true
+-- vim.opt.smartident = true
+-- vim.opt.autoident = true
+
+-- Search settings
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
 
 
+-- Split behavior
+vim.opt.wrap = false               -- Não quebra linhas
+vim.opt.linebreak = true           -- Quebra em palavras quando wrap for ativado
+vim.opt.showbreak = '↪ '           -- Símbolo para quebras
+vim.opt.sidescroll = 5             -- Scroll horizontal suave
+vim.opt.listchars:append({
+  extends = '›',                   -- Indicador de continuação à direita
+  precedes = '‹',                  -- Indicador de continuação à esquerda
+})
+
+vim.keymap.set('n', 'zl', '5zl', { desc = 'Scroll horizontal para esquerda' })
+vim.keymap.set('n', 'zh', '5zh', { desc = 'Scroll horizontal para direita' })
+vim.keymap.set('n', 'zL', 'zL', { desc = 'Scroll horizontal amplo para esquerda' })
+vim.keymap.set('n', 'zH', 'zH', { desc = 'Scroll horizontal amplo para direita' })
+
+vim.opt.splitbelow = true -- Horizontal splits go below
+vim.opt.splitright = true -- Vertical splits go right
+
+
+
+
+-- Window appearance
+vim.opt.winblend = 10        -- Transparência em janelas flutuantes
+vim.opt.pumblend = 10        -- Transparência no menu de autocompletar
+vim.opt.termguicolors = true -- Habilita cores verdadeiras (24-bit)
+
+vim.opt.fillchars:append({
+  horiz = '━', -- Barra horizontal
+  horizup = '┻', -- Canto superior
+  horizdown = '┳', -- Canto inferior
+  vert = '┃', -- Barra vertical
+  vertleft = '┫', -- Canto esquerdo
+  vertright = '┣', -- Canto direito
+  verthoriz = '╋', -- Cruzamento
+})
+
+-- vim.opt.winbar = "%=%m %f"  -- Opcional: melhora a barra superior da janela
+
+-- Visual cues
+vim.opt.showmode = true   -- Oculta o -- INSERT -- (já que temos statusline)
+vim.opt.cursorline = true -- Destaque para linha atual
+-- vim.opt.colorcolumn = "100"          -- Linha guia para limite de coluna
+vim.opt.list = true       -- Mostra caracteres especiais
+vim.opt.listchars = {
+  tab = "→ ",
+  trail = "·",
+  nbsp = "␣",
+  extends = "⟩",
+  precedes = "⟨"
+}
+
+-- Ajustes específicos para tokyonight
+vim.cmd [[
+  " highlight ColorColumn guibg=#3b4261
+  " highlight CursorLine guibg=#3b4261
+  " highlight! link CursorLineNr Normal
+  highlight! link WinSeparator VertSplit
+  highlight DiagnosticVirtualTextError guibg=none
+  highlight DiagnosticVirtualTextWarn guibg=none
+
+
+  highlight WinSeparator guifg=#7aa2f7 guibg=NONE gui=bold
+  " Para versão noturna do tokyonight:
+  highlight WinSeparator guifg=#3b4261 guibg=NONE
+
+
+  " StatusLine principal (janela ativa)
+
+
+  highlight StatusLine guibg=#afb3db guifg=#1d3975 gui=bold
+  " StatusLine não ativo
+  highlight StatusLineNC guibg=#16161e guifg=#3b4261
+  " Separador
+  highlight StatusLineSeparator guifg=#7aa2f7
+
+]]
+
+-- Smooth scrolling
+vim.opt.smoothscroll = true
+
+-- Better diff view
+vim.opt.diffopt:append("vertical") -- Diff em vertical
+vim.opt.fillchars:append({
+  diff = "╱",
+  eob = " " -- Remove ~ no final do buffer
+})
 
 -- #############################
 -- ##                         ##
@@ -276,8 +386,345 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set("n", "<leader>cc", "gcc", { desc = "Toggle comment (line)" })
-vim.keymap.set("v", "<leader>c", "gc", { desc = "Comment the selection" })
+
+
+-- Move lines up/down
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+
+
+
+-- Splitting & Resizing
+vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+
+
+
+
+-- Adding sens to the 'J'
+vim.keymap.set("n", "<A-j>", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
+
+
+
+-- Adding 'space' character to the current line
+vim.keymap.set("n", "<S-a>", function()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = vim.api.nvim_get_current_line()
+  if pos[2] >= #line then
+    vim.api.nvim_set_current_line(line.." ")
+  else
+    vim.api.nvim_set_current_line(line:sub(1,pos[2]+1).." "..line:sub(pos[2]+2))
+  end
+  vim.api.nvim_win_set_cursor(0, {pos[1], pos[2]+1})
+end)
+
+
+
+-- Copy Full File-Path
+vim.keymap.set("n", "<leader>pa", function()
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  print("file:", path)
+end)
+
+
+
+
+
+-- ########################
+-- ##                    ##
+-- ## Basic autocommands ##
+-- ##                    ##
+-- ########################
+local augroup = vim.api.nvim_create_augroup("UserConfig", {})
+
+
+-- Highlight yanked text
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = augroup,
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
+
+-- Return to last edit position when opening files
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = augroup,
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+})
+
+-- -- Disable line numbers in terminal
+-- vim.api.nvim_create_autocmd("TermOpen", {
+--   group = augroup,
+--   callback = function()
+--     vim.opt_local.number = false
+--     vim.opt_local.relativenumber = false
+--     vim.opt_local.signcolumn = "no"
+--   end,
+-- })
+
+
+
+
+
+-- ######################################
+-- ##                                  ##
+-- ## FloatingTerminal configuration ! ##
+-- ##                                  ##
+-- ######################################
+
+local terminal_state = {
+  buf = nil,
+  win = nil,
+  is_open = false
+}
+
+local function FloatingTerminal()
+  -- If terminal is already open, close it (toggle behavior)
+  if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
+    vim.api.nvim_win_close(terminal_state.win, false)
+    terminal_state.is_open = false
+    return
+  end
+
+  -- Create buffer if it doesn't exist or is invalid
+  if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
+    terminal_state.buf = vim.api.nvim_create_buf(false, true)
+    -- Set buffer options for better terminal experience
+    vim.api.nvim_buf_set_option(terminal_state.buf, 'bufhidden', 'hide')
+  end
+
+  -- Calculate window dimensions
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  -- Create the floating window
+  terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+  })
+
+  -- Set transparency for the floating window
+  vim.api.nvim_win_set_option(terminal_state.win, 'winblend', 0)
+
+  -- Set transparent background for the window
+  vim.api.nvim_win_set_option(terminal_state.win, 'winhighlight',
+    'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder')
+
+  -- Define highlight groups for transparency
+  vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
+  vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none", })
+
+  -- Start terminal if not already running
+  local has_terminal = false
+  local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
+  for _, line in ipairs(lines) do
+    if line ~= "" then
+      has_terminal = true
+      break
+    end
+  end
+
+  if not has_terminal then
+    vim.fn.termopen(os.getenv("SHELL"))
+  end
+
+  terminal_state.is_open = true
+  vim.cmd("startinsert")
+
+  -- Set up auto-close on buffer leave
+  vim.api.nvim_create_autocmd("BufLeave", {
+    buffer = terminal_state.buf,
+    callback = function()
+      if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
+        vim.api.nvim_win_close(terminal_state.win, false)
+        terminal_state.is_open = false
+      end
+    end,
+    once = true
+  })
+end
+
+-- Function to explicitly close the terminal
+local function CloseFloatingTerminal()
+  if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
+    vim.api.nvim_win_close(terminal_state.win, false)
+    terminal_state.is_open = false
+  end
+end
+
+-- Key mappings
+vim.keymap.set("n", "<leader>ft", FloatingTerminal, { noremap = true, silent = true, desc = "Toggle floating terminal" })
+vim.keymap.set("t", "<Esc>", function()
+  if terminal_state.is_open then
+    vim.api.nvim_win_close(terminal_state.win, false)
+    terminal_state.is_open = false
+  end
+end, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
+
+
+
+
+
+
+-- #################################
+-- ##                             ##
+-- ## TabLineFill Configuration ! ##
+-- ##                             ##
+-- #################################
+
+-- Tab display settings
+vim.opt.showtabline = 1 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
+vim.opt.tabline = ''    -- Use default tabline (empty string uses built-in)
+
+
+
+-- Transparent tabline appearance
+vim.cmd([[
+  hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
+]])
+
+
+
+-- Alternative navigation (more intuitive)
+vim.keymap.set('n', '<leader>	', ':tabnew<CR>', { desc = 'New tab' })
+vim.keymap.set('n', '<leader>q', ':tabclose<CR>', { desc = 'Close tab' })
+
+
+
+
+-- Navegação entre tabs com tratamento de erros e feedback visual
+for i = 1, 9 do
+  vim.keymap.set('n', '<A-'..i..'>', function()
+    local total_tabs = vim.fn.tabpagenr('$')
+    
+    if i <= total_tabs then
+      vim.cmd(i..'tabnext')
+      
+      -- Feedback visual discreto (opcional)
+      vim.defer_fn(function()
+        vim.notify("Tab "..i.."/"..total_tabs, vim.log.levels.INFO, {
+          title = "Navegação",
+          timeout = 800,
+          icon = ""
+        })
+      end, 50)
+    else
+      -- Mensagem amigável para tab inexistente
+      vim.notify("Tab "..i.." não existe (máx: "..total_tabs..")", vim.log.levels.WARN, {
+        title = "Navegação de Tabs",
+        timeout = 2000,
+        icon = "⚠️"
+      })
+      
+      -- Pisca a tab atual como feedback
+      local original_color = vim.api.nvim_get_hl_by_name('TabLineSel', true)
+      vim.api.nvim_set_hl(0, 'TabLineSel', { bg = '#ff0000', fg = original_color.fg })
+      vim.defer_fn(function()
+        vim.api.nvim_set_hl(0, 'TabLineSel', original_color)
+      end, 300)
+    end
+  end, { desc = 'Ir para Tab '..i })
+end
+
+
+
+
+-- Tab moving
+vim.keymap.set('n', '<leader>tm', ':tabmove<CR>', { desc = 'Move tab' })
+vim.keymap.set('n', '<leader>t>', ':tabmove +1<CR>', { desc = 'Move tab right' })
+vim.keymap.set('n', '<leader>t<', ':tabmove -1<CR>', { desc = 'Move tab left' })
+
+
+
+
+-- Function to open file in new tab
+local function open_file_in_tab()
+  vim.ui.input({ prompt = 'File to open in new tab: ', completion = 'file' }, function(input)
+    if input and input ~= '' then
+      vim.cmd('tabnew ' .. input)
+    end
+  end)
+end
+
+
+
+-- Function to duplicate current tab
+local function duplicate_tab()
+  local current_file = vim.fn.expand('%:p')
+  if current_file ~= '' then
+    vim.cmd('tabnew ' .. current_file)
+  else
+    vim.cmd('tabnew')
+  end
+end
+
+
+
+-- Function to close tabs to the right
+local function close_tabs_right()
+  local current_tab = vim.fn.tabpagenr()
+  local last_tab = vim.fn.tabpagenr('$')
+
+  for i = last_tab, current_tab + 1, -1 do
+    vim.cmd(i .. 'tabclose')
+  end
+end
+
+
+
+-- Function to close tabs to the left
+local function close_tabs_left()
+  local current_tab = vim.fn.tabpagenr()
+
+  for i = current_tab - 1, 1, -1 do
+    vim.cmd('1tabclose')
+  end
+end
+
+
+-- Enhanced keybindings
+vim.keymap.set('n', '<leader>tO', open_file_in_tab, { desc = 'Open file in new tab' })
+vim.keymap.set('n', '<leader>td', duplicate_tab, { desc = 'Duplicate current tab' })
+vim.keymap.set('n', '<leader>tr', close_tabs_right, { desc = 'Close tabs to the right' })
+vim.keymap.set('n', '<leader>tL', close_tabs_left, { desc = 'Close tabs to the left' })
+
+
+-- Function to close buffer but keep tab if it's the only buffer in tab
+local function smart_close_buffer()
+  local buffers_in_tab = #vim.fn.tabpagebuflist()
+  if buffers_in_tab > 1 then
+    vim.cmd('bdelete')
+  else
+    -- If it's the only buffer in tab, close the tab
+    vim.cmd('tabclose')
+  end
+end
+vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buffer/tab' })
+
+
+
 
 
 
@@ -316,6 +763,8 @@ end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
 
 
 
+
+
 -- ###########################################
 -- ##                                       ##
 -- ## Things about clipboard configuration. ##
@@ -338,31 +787,48 @@ vim.g.clipboard = {
 
 
 
+
+
 -- ###########################
 -- ##                       ##
 -- ## Things about Harpoon. ##
 -- ##                       ##
 -- ###########################
 
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
+local harpoon = require("harpoon")
 
-vim.keymap.set("n", "<leader>a", mark.add_file)
-vim.keymap.set("n", "<leader>m", ui.toggle_quick_menu)
+-- Configuração básica
+harpoon.setup({
+  menu = {
+    width = 60,
+    height = 20,
+  }
+})
 
+-- Atalhos ESSENCIAIS
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Adicionar arquivo" })
+vim.keymap.set("n", "<leader>m", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Menu Harpoon" })
+
+-- REMOVER ÚLTIMO ARQUIVO (solução definitiva)
+vim.keymap.set("n", "<leader>r", function()
+  local list = harpoon:list()
+  if #list.items > 0 then
+    list:remove_at(#list.items)
+    vim.notify("Removido último arquivo: " .. list.items[#list.items].value, vim.log.levels.INFO)
+  else
+    vim.notify("Lista vazia!", vim.log.levels.WARN)
+  end
+end, { desc = "Remover último arquivo" })
+
+
+
+-- REMOVER ARQUIVO ATUAL (opcional)
 vim.keymap.set("n", "<leader>d", function()
-  local mark = require("harpoon.mark")
-  mark.rm_file() -- Remove o arquivo atual da lista
-end, { desc = "Remover arquivo atual do Harpoon" })
+  local current_file = vim.api.nvim_buf_get_name(0)
+  harpoon:list():remove(current_file)
+end, { desc = "Remover arquivo atual" })
 
-vim.keymap.set("n", "<A-1>", function() ui.nav_file(1) end)
-vim.keymap.set("n", "<A-2>", function() ui.nav_file(2) end)
-vim.keymap.set("n", "<A-3>", function() ui.nav_file(3) end)
-vim.keymap.set("n", "<A-4>", function() ui.nav_file(4) end)
-vim.keymap.set("n", "<A-5>", function() ui.nav_file(5) end)
-vim.keymap.set("n", "<A-6>", function() ui.nav_file(6) end)
-vim.keymap.set("n", "<A-7>", function() ui.nav_file(7) end)
-vim.keymap.set("n", "<A-8>", function() ui.nav_file(8) end)
+
 
 
 
@@ -373,6 +839,8 @@ vim.keymap.set("n", "<A-8>", function() ui.nav_file(8) end)
 -- ############################
 
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+
+
 
 
 
