@@ -27,12 +27,63 @@ require("lazy").setup({
   spec = {
     -- add your plugins here
 
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about colorscheme. ##
+    -- ##                           ##
+    -- ###############################
+
     {
       "folke/tokyonight.nvim",
       lazy = false,
       priority = 1000,
       opts = {},
     },
+
+
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about Autopairs.   ##
+    -- ##                           ##
+    -- ###############################
+
+    {
+      "windwp/nvim-autopairs", -- Autopairs
+      event = "InsertEnter",
+      config = true,
+    },
+
+    -- #################################
+    -- ##                             ##
+    -- ## Plugin about Commentstring. ##
+    -- ##                             ##
+    -- #################################
+
+    {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      dependencies = "nvim-treesitter/nvim-treesitter",
+      lazy = true, -- Carrega apenas quando necessário
+    },
+
+    -- Plugin principal de comentários
+    {
+      "numToStr/Comment.nvim",
+      dependencies = { -- Só carrega depois do context-commentstring
+        "JoosepAlviste/nvim-ts-context-commentstring",
+      },
+      config = function()
+        -- Configuração do plugin + keymaps
+        require("Comment").setup({
+          pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+        })
+      end,
+    },
+
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about telescope.   ##
+    -- ##                           ##
+    -- ###############################
 
     {
       'nvim-telescope/telescope.nvim',
@@ -46,13 +97,31 @@ require("lazy").setup({
       dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     },
 
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about Harpoon.     ##
+    -- ##                           ##
+    -- ###############################
+
     {
       "ThePrimeagen/harpoon"
     },
 
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about UndoTree.    ##
+    -- ##                           ##
+    -- ###############################
+
     {
       "mbbill/undotree"
     },
+
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about TreeSitter.  ##
+    -- ##                           ##
+    -- ###############################
 
     {
       "nvim-treesitter/nvim-treesitter",
@@ -92,12 +161,50 @@ require("lazy").setup({
       end,
     },
 
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about lspconfig.   ##
+    -- ##                           ##
+    -- ###############################
+
     {
       "neovim/nvim-lspconfig",
+      priority = 1000,
       config = function()
+        -- Configuração de diagnósticos
+        vim.diagnostic.config({
+          virtual_text = {
+            prefix = '●', -- Símbolo personalizado
+            spacing = 2,
+          },
+          -- Melhoria visual para sinais no gutter
+          vim.diagnostic.config({
+            signs = {
+              text = {
+                [vim.diagnostic.severity.ERROR] = " ",
+                [vim.diagnostic.severity.WARN] = " ",
+                [vim.diagnostic.severity.HINT] = " ",
+                [vim.diagnostic.severity.INFO] = " ",
+              }
+            }
+          }),
+          underline = true,
+          update_in_insert = false,
+          severity_sort = true,
+          float = {
+            border = 'rounded', -- Borda bonita para hover
+            source = 'always',
+          }
+        })
         require("lspconfig").lua_ls.setup {}
       end,
     },
+
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about Completicion.##
+    -- ##                           ##
+    -- ###############################
 
     {
       'hrsh7th/nvim-cmp',
@@ -127,6 +234,12 @@ require("lazy").setup({
     }
 
   },
+
+  rocks = {
+    hererocks = false, -- Desativa hererocks
+    enabled = false    -- Desativa completamente luarocks
+  },
+
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
@@ -163,33 +276,8 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Comentar/descomentar linha atual
-vim.keymap.set('n', '<leader>cc', function()
-  local line = vim.api.nvim_get_current_line()
-  if line:match('^%s*%-%-') then
-    -- Remove comentário (-- no início)
-    vim.api.nvim_set_current_line(line:gsub('^%s*%-%-%s*', ''))
-  else
-    -- Adiciona comentário
-    vim.api.nvim_set_current_line('-- ' .. line)
-  end
-end, { desc = 'Toggle comment (line)' })
-
-
--- Para modo visual (seleção múltipla)
-vim.keymap.set('v', '<leader>cc', function()
-  local start_line, end_line = vim.fn.line("'<"), vim.fn.line("'>")
-  for l = start_line, end_line do
-    local line = vim.api.nvim_buf_get_lines(0, l - 1, l, false)[1]
-    if line:match('^%s*%-%-') then
-      line = line:gsub('^%s*%-%-%s*', '')
-    else
-      line = '-- ' .. line
-    end
-    vim.api.nvim_buf_set_lines(0, l - 1, l, false, { line })
-  end
-end, { desc = 'Toggle comment (selection)' })
-
+vim.keymap.set("n", "<leader>cc", "gcc", { desc = "Toggle comment (line)" })
+vim.keymap.set("v", "<leader>c", "gc", { desc = "Comment the selection" })
 
 
 
@@ -295,74 +383,53 @@ vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 -- ##                   ##
 -- #######################
 
-local lsp = vim.lsp
 
--- Função de ativação padrão para todos os LSPs
+local lsp = require('lspconfig')
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+
+-- Configuração de capabilities para autocompletion
+local capabilities = cmp_nvim_lsp.default_capabilities()
+
+-- Função de ativação
 local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr, remap = false }
 
-  -- Mapeamentos básicos
-  vim.keymap.set('n', 'gd', lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', lsp.buf.hover, opts)
-  vim.keymap.set('n', '<leader>vca', lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>vrr', lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>vrn', lsp.buf.rename, opts)
-  vim.keymap.set('i', '<C-h>', lsp.buf.signature_help, opts)
-
-  -- Formatação automática ao salvar (opcional)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+  vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
 end
 
--- Configura capabilities para autocompletion
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- Função para configurar qualquer servidor LSP
-local setup_lsp = function(server, config)
-  local final_config = vim.tbl_deep_extend('force', {
-    capabilities = capabilities,
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
+-- Configuração específica para Lua (NixOS)
+lsp.lua_ls.setup({
+  cmd = { 'lua-language-server' }, -- Caminho completo se necessário
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+        path = {
+          vim.env.VIMRUNTIME,
+          -- Adicione caminhos específicos do NixOS aqui
+        }
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = vim.api.nvim_get_runtime_file("", true)
+      },
+      telemetry = { enable = false }
     }
-  }, config or {})
-
-  -- Especificação explícita para NixOS
-  if server == 'lua_ls' then
-    final_config.cmd = { 'lua-language-server' } -- Ou caminho completo no NixOS
-  end
-
-  lsp.start({
-    name = server,
-    cmd = final_config.cmd,
-    settings = final_config.settings,
-    on_attach = final_config.on_attach,
-    capabilities = final_config.capabilities
-  })
-end
-
--- Configuração específica para Lua
-local ok, lua_ls_config = pcall(require, 'lsp.lua_ls')
-if ok then
-  setup_lsp('lua_ls', lua_ls_config)
-else
-  vim.notify("Configuração lua_ls não encontrada", vim.log.levels.WARN)
-  -- Configuração fallback
-  setup_lsp('lua_ls', {
-    settings = {
-      Lua = {
-        runtime = { version = 'LuaJIT' },
-        workspace = { checkThirdParty = false },
-        telemetry = { enable = false }
-      }
-    }
-  })
-end
+  }
+})
 
 
+-- Mapeamento manual de formatação
 vim.keymap.set('n', '<leader>f', function()
   vim.lsp.buf.format({ async = true })
 end, { desc = 'Formatar código' })
 
-
--- Verificação de status (opcional)
-vim.keymap.set('n', '<leader>vl', '<cmd>LspInfo<CR>', { desc = 'Verificar status LSP' })
+-- Verificação de status
+vim.keymap.set('n', '<leader>vl', vim.cmd.LspInfo, { desc = 'Verificar status LSP' })
