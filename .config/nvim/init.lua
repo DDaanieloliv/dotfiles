@@ -270,6 +270,7 @@ vim.g.have_nerd_font = true
 -- vim.o.mouse = 'a'
 vim.opt.scrolloff = 10
 vim.opt.sidescrolloff = 8
+vim.opt.swapfile = false
 
 -- Identation
 vim.opt.tabstop = 2      -- Número de espaços que um <Tab> representa
@@ -387,14 +388,11 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 
-
 -- Move lines up/down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
-
 
 
 -- Splitting & Resizing
@@ -406,11 +404,8 @@ vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease wi
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
 
-
-
 -- Adding sens to the 'J'
 vim.keymap.set("n", "<A-j>", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
-
 
 
 -- Adding 'space' character to the current line
@@ -424,7 +419,6 @@ vim.keymap.set("n", "<S-a>", function()
   end
   vim.api.nvim_win_set_cursor(0, {pos[1], pos[2]+1})
 end)
-
 
 
 -- Copy Full File-Path
@@ -476,6 +470,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 --     vim.opt_local.signcolumn = "no"
 --   end,
 -- })
+
 
 
 
@@ -599,19 +594,14 @@ vim.opt.showtabline = 1 -- Always show tabline (0=never, 1=when multiple tabs, 2
 vim.opt.tabline = ''    -- Use default tabline (empty string uses built-in)
 
 
-
 -- Transparent tabline appearance
 vim.cmd([[
   hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
 ]])
 
-
-
 -- Alternative navigation (more intuitive)
 vim.keymap.set('n', '<leader>	', ':tabnew<CR>', { desc = 'New tab' })
 vim.keymap.set('n', '<leader>q', ':tabclose<CR>', { desc = 'Close tab' })
-
-
 
 
 -- Navegação entre tabs com tratamento de erros e feedback visual
@@ -649,14 +639,10 @@ for i = 1, 9 do
 end
 
 
-
-
 -- Tab moving
 vim.keymap.set('n', '<leader>tm', ':tabmove<CR>', { desc = 'Move tab' })
 vim.keymap.set('n', '<leader>t>', ':tabmove +1<CR>', { desc = 'Move tab right' })
 vim.keymap.set('n', '<leader>t<', ':tabmove -1<CR>', { desc = 'Move tab left' })
-
-
 
 
 -- Function to open file in new tab
@@ -667,7 +653,6 @@ local function open_file_in_tab()
     end
   end)
 end
-
 
 
 -- Function to duplicate current tab
@@ -681,7 +666,6 @@ local function duplicate_tab()
 end
 
 
-
 -- Function to close tabs to the right
 local function close_tabs_right()
   local current_tab = vim.fn.tabpagenr()
@@ -693,7 +677,6 @@ local function close_tabs_right()
 end
 
 
-
 -- Function to close tabs to the left
 local function close_tabs_left()
   local current_tab = vim.fn.tabpagenr()
@@ -703,13 +686,11 @@ local function close_tabs_left()
   end
 end
 
-
 -- Enhanced keybindings
 vim.keymap.set('n', '<leader>tO', open_file_in_tab, { desc = 'Open file in new tab' })
 vim.keymap.set('n', '<leader>td', duplicate_tab, { desc = 'Duplicate current tab' })
 vim.keymap.set('n', '<leader>tr', close_tabs_right, { desc = 'Close tabs to the right' })
 vim.keymap.set('n', '<leader>tL', close_tabs_left, { desc = 'Close tabs to the left' })
-
 
 -- Function to close buffer but keep tab if it's the only buffer in tab
 local function smart_close_buffer()
