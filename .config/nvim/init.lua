@@ -1,5 +1,3 @@
-
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -99,6 +97,39 @@ require("lazy").setup({
       dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     },
 
+    {
+      'nvim-telescope/telescope-ui-select.nvim',
+      config = function ()
+        -- This is your opts table
+        require("telescope").setup {
+          extensions = {
+            ["ui-select"] = {
+              require("telescope.themes").get_dropdown {
+                -- even more opts
+              }
+
+              -- pseudo code / specification for writing custom displays, like the one
+              -- for "codeactions"
+              -- specific_opts = {
+              --   [kind] = {
+              --     make_indexed = function(items) -> indexed_items, width,
+              --     make_displayer = function(widths) -> displayer
+              --     make_display = function(displayer) -> function(e)
+              --     make_ordinal = function(e) -> string
+              --   },
+              --   -- for example to disable the custom builtin "codeactions" display
+              --      do the following
+              --   codeactions = false,
+              -- }
+            }
+          }
+        }
+        -- To get ui-select loaded and working with telescope, you need to call
+        -- load_extension, somewhere after setup function:
+        require("telescope").load_extension("ui-select")
+      end
+    },
+
     -- ###############################
     -- ##                           ##
     -- ## Plugin about Harpoon.     ##
@@ -174,27 +205,52 @@ require("lazy").setup({
     -- ##                           ##
     -- ###############################
 
+    -- Configuração do Mason (gerenciador de LSPs, linters, formatters)
+    {
+      "mason-org/mason.nvim",
+      config = function()
+        require("mason").setup()
+      end
+    },
+    {
+      "mason-org/mason-lspconfig.nvim",
+      config = function()
+        require("mason-lspconfig").setup({
+          ensure_installed = {"lua_ls", "jdtls"}
+          -- automatic_installation = true, -- Instala automaticamente LSPs faltantes
+        })
+      end
+    },
     {
       "neovim/nvim-lspconfig",
-      priority = 1000,
       config = function()
-        -- Configuração de diagnósticos
+        local lspconfig = require("lspconfig")
+        lspconfig.lua_ls.setup({})
+         lspconfig.jdtls.setup({})
+
+        -- Atalhos básicos
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
+        vim.keymap.set('n', '<leader>rr', vim.lsp.buf.references, {})
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
+        vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, {})
+
+   
         vim.diagnostic.config({
           virtual_text = {
             prefix = '●', -- Símbolo personalizado
             spacing = 2,
           },
           -- Melhoria visual para sinais no gutter
-          vim.diagnostic.config({
-            signs = {
-              text = {
-                [vim.diagnostic.severity.ERROR] = " ",
-                [vim.diagnostic.severity.WARN] = " ",
-                [vim.diagnostic.severity.HINT] = " ",
-                [vim.diagnostic.severity.INFO] = " ",
-              }
+          signs = {
+            text = {
+              [vim.diagnostic.severity.ERROR] = " ",
+              [vim.diagnostic.severity.WARN] = " ",
+              [vim.diagnostic.severity.HINT] = " ",
+              [vim.diagnostic.severity.INFO] = " ",
             }
-          }),
+          },
           underline = true,
           update_in_insert = false,
           severity_sort = true,
@@ -203,10 +259,11 @@ require("lazy").setup({
             source = 'always',
           }
         })
-        require("lspconfig").lua_ls.setup {}
-      end,
+
+      end
     },
 
+   
     -- ###############################
     -- ##                           ##
     -- ## Plugin about Completicion.##
@@ -288,13 +345,13 @@ vim.opt.incsearch = true
 
 
 -- Split behavior
-vim.opt.wrap = false               -- Não quebra linhas
-vim.opt.linebreak = true           -- Quebra em palavras quando wrap for ativado
-vim.opt.showbreak = '↪ '           -- Símbolo para quebras
-vim.opt.sidescroll = 5             -- Scroll horizontal suave
+vim.opt.wrap = false -- Não quebra linhas
+vim.opt.linebreak = true -- Quebra em palavras quando wrap for ativado
+vim.opt.showbreak = '↪ ' -- Símbolo para quebras
+vim.opt.sidescroll = 5 -- Scroll horizontal suave
 vim.opt.listchars:append({
-  extends = '›',                   -- Indicador de continuação à direita
-  precedes = '‹',                  -- Indicador de continuação à esquerda
+  extends = '›', -- Indicador de continuação à direita
+  precedes = '‹', -- Indicador de continuação à esquerda
 })
 
 vim.keymap.set('n', 'zl', '5zl', { desc = 'Scroll horizontal para esquerda' })
@@ -317,7 +374,7 @@ vim.opt.fillchars:append({
   horiz = '━', -- Barra horizontal
   horizup = '┻', -- Canto superior
   horizdown = '┳', -- Canto inferior
-  vert = '┃', -- Barra vertical
+  vert = '▌', -- Barra vertical
   vertleft = '┫', -- Canto esquerdo
   vertright = '┣', -- Canto direito
   verthoriz = '╋', -- Cruzamento
@@ -355,7 +412,7 @@ vim.cmd [[
 
   " StatusLine principal (janela ativa)
 
-
+  
   highlight StatusLine guibg=#afb3db guifg=#1d3975 gui=bold
   " StatusLine não ativo
   highlight StatusLineNC guibg=#16161e guifg=#3b4261
@@ -363,6 +420,7 @@ vim.cmd [[
   highlight StatusLineSeparator guifg=#7aa2f7
 
 ]]
+
 
 -- Smooth scrolling
 vim.opt.smoothscroll = true
@@ -413,11 +471,11 @@ vim.keymap.set("n", "<S-a>", function()
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = vim.api.nvim_get_current_line()
   if pos[2] >= #line then
-    vim.api.nvim_set_current_line(line.." ")
+    vim.api.nvim_set_current_line(line .. " ")
   else
-    vim.api.nvim_set_current_line(line:sub(1,pos[2]+1).." "..line:sub(pos[2]+2))
+    vim.api.nvim_set_current_line(line:sub(1, pos[2] + 1) .. " " .. line:sub(pos[2] + 2))
   end
-  vim.api.nvim_win_set_cursor(0, {pos[1], pos[2]+1})
+  vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + 1 })
 end)
 
 
@@ -606,15 +664,15 @@ vim.keymap.set('n', '<leader>q', ':tabclose<CR>', { desc = 'Close tab' })
 
 -- Navegação entre tabs com tratamento de erros e feedback visual
 for i = 1, 9 do
-  vim.keymap.set('n', '<A-'..i..'>', function()
+  vim.keymap.set('n', '<A-' .. i .. '>', function()
     local total_tabs = vim.fn.tabpagenr('$')
-    
+
     if i <= total_tabs then
-      vim.cmd(i..'tabnext')
-      
+      vim.cmd(i .. 'tabnext')
+
       -- Feedback visual discreto (opcional)
       vim.defer_fn(function()
-        vim.notify("Tab "..i.."/"..total_tabs, vim.log.levels.INFO, {
+        vim.notify("Tab " .. i .. "/" .. total_tabs, vim.log.levels.INFO, {
           title = "Navegação",
           timeout = 800,
           icon = ""
@@ -622,12 +680,12 @@ for i = 1, 9 do
       end, 50)
     else
       -- Mensagem amigável para tab inexistente
-      vim.notify("Tab "..i.." não existe (máx: "..total_tabs..")", vim.log.levels.WARN, {
+      vim.notify("Tab " .. i .. " não existe (máx: " .. total_tabs .. ")", vim.log.levels.WARN, {
         title = "Navegação de Tabs",
         timeout = 2000,
         icon = "⚠️"
       })
-      
+
       -- Pisca a tab atual como feedback
       local original_color = vim.api.nvim_get_hl_by_name('TabLineSel', true)
       vim.api.nvim_set_hl(0, 'TabLineSel', { bg = '#ff0000', fg = original_color.fg })
@@ -635,7 +693,7 @@ for i = 1, 9 do
         vim.api.nvim_set_hl(0, 'TabLineSel', original_color)
       end, 300)
     end
-  end, { desc = 'Ir para Tab '..i })
+  end, { desc = 'Ir para Tab ' .. i })
 end
 
 
@@ -753,21 +811,6 @@ end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
 -- ###########################################
 vim.opt.clipboard = "unnamedplus"
 
-vim.g.clipboard = {
-  name = "wl-clipboard",
-  copy = {
-    ["+"] = "wl-copy --foreground --type text/plain",
-    ["*"] = "wl-copy --foreground --type text/plain",
-  },
-  paste = {
-    ["+"] = "wl-paste --no-newline",
-    ["*"] = "wl-paste --no-newline",
-  },
-  cache_enabled = 1,
-}
-
-
-
 
 
 -- ###########################
@@ -833,52 +876,52 @@ vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 -- #######################
 
 
-local lsp = require('lspconfig')
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-
--- Configuração de capabilities para autocompletion
-local capabilities = cmp_nvim_lsp.default_capabilities()
-
--- Função de ativação
-local on_attach = function(client, bufnr)
-  local opts = { buffer = bufnr, remap = false }
-
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
-end
-
--- Configuração específica para Lua (NixOS)
-lsp.lua_ls.setup({
-  cmd = { 'lua-language-server' }, -- Caminho completo se necessário
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-        path = {
-          vim.env.VIMRUNTIME,
-          -- Adicione caminhos específicos do NixOS aqui
-        }
-      },
-      workspace = {
-        checkThirdParty = false,
-        library = vim.api.nvim_get_runtime_file("", true)
-      },
-      telemetry = { enable = false }
-    }
-  }
-})
-
-
--- Mapeamento manual de formatação
-vim.keymap.set('n', '<leader>f', function()
-  vim.lsp.buf.format({ async = true })
-end, { desc = 'Formatar código' })
-
--- Verificação de status
-vim.keymap.set('n', '<leader>vl', vim.cmd.LspInfo, { desc = 'Verificar status LSP' })
+-- local lsp = require('lspconfig')
+-- local cmp_nvim_lsp = require('cmp_nvim_lsp')
+--
+-- -- Configuração de capabilities para autocompletion
+-- local capabilities = cmp_nvim_lsp.default_capabilities()
+--
+-- -- Função de ativação
+-- local on_attach = function(client, bufnr)
+--   local opts = { buffer = bufnr, remap = false }
+--
+--   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+--   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+--   vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+--   vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
+--   vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
+--   vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
+-- end
+--
+-- -- Configuração específica para Lua (NixOS)
+-- lsp.lua_ls.setup({
+--   cmd = { 'lua-language-server' }, -- Caminho completo se necessário
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   settings = {
+--     Lua = {
+--       runtime = {
+--         version = 'LuaJIT',
+--         path = {
+--           vim.env.VIMRUNTIME,
+--           -- Adicione caminhos específicos do NixOS aqui
+--         }
+--       },
+--       workspace = {
+--         checkThirdParty = false,
+--         library = vim.api.nvim_get_runtime_file("", true)
+--       },
+--       telemetry = { enable = false }
+--     }
+--   }
+-- })
+--
+--
+-- -- Mapeamento manual de formatação
+-- vim.keymap.set('n', '<leader>f', function()
+--   vim.lsp.buf.format({ async = true })
+-- end, { desc = 'Formatar código' })
+--
+-- -- Verificação de status
+-- vim.keymap.set('n', '<leader>vl', vim.cmd.LspInfo, { desc = 'Verificar status LSP' })
