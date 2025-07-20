@@ -21,7 +21,6 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -39,7 +38,6 @@ require("lazy").setup({
       priority = 1000,
       opts = {},
     },
-
 
     -- ###############################
     -- ##                           ##
@@ -86,10 +84,10 @@ require("lazy").setup({
     -- ###############################
 
     {
-      'nvim-telescope/telescope.nvim',
-      tag = '0.1.8',
+      "nvim-telescope/telescope.nvim",
+      tag = "0.1.8",
       -- or                              , branch = '0.1.x',
-      dependencies = { 'nvim-lua/plenary.nvim' }
+      dependencies = { "nvim-lua/plenary.nvim" },
     },
 
     {
@@ -98,15 +96,15 @@ require("lazy").setup({
     },
 
     {
-      'nvim-telescope/telescope-ui-select.nvim',
-      config = function ()
+      "nvim-telescope/telescope-ui-select.nvim",
+      config = function()
         -- This is your opts table
-        require("telescope").setup {
+        require("telescope").setup({
           extensions = {
             ["ui-select"] = {
-              require("telescope.themes").get_dropdown {
+              require("telescope.themes").get_dropdown({
                 -- even more opts
-              }
+              }),
 
               -- pseudo code / specification for writing custom displays, like the one
               -- for "codeactions"
@@ -121,13 +119,13 @@ require("lazy").setup({
               --      do the following
               --   codeactions = false,
               -- }
-            }
-          }
-        }
+            },
+          },
+        })
         -- To get ui-select loaded and working with telescope, you need to call
         -- load_extension, somewhere after setup function:
         require("telescope").load_extension("ui-select")
-      end
+      end,
     },
 
     -- ###############################
@@ -143,7 +141,7 @@ require("lazy").setup({
       dependencies = { "nvim-lua/plenary.nvim" },
       config = function()
         require("harpoon").setup({})
-      end
+      end,
     },
     -- ###############################
     -- ##                           ##
@@ -152,7 +150,7 @@ require("lazy").setup({
     -- ###############################
 
     {
-      "mbbill/undotree"
+      "mbbill/undotree",
     },
 
     -- ###############################
@@ -171,11 +169,7 @@ require("lazy").setup({
       opts = {
         highlight = { enable = true },
         indent = { enable = true },
-        ensure_installed = {
-          "bash", "c", "diff", "html", "javascript", "jsdoc", "json", "jsonc",
-          "lua", "luadoc", "luap", "markdown", "markdown_inline", "python",
-          "query", "regex", "toml", "tsx", "typescript", "vim", "vimdoc", "yaml",
-        },
+        auto_isntall = true,
         incremental_selection = {
           enable = true,
           keymaps = {
@@ -210,36 +204,35 @@ require("lazy").setup({
       "mason-org/mason.nvim",
       config = function()
         require("mason").setup()
-      end
+      end,
     },
     {
       "mason-org/mason-lspconfig.nvim",
       config = function()
         require("mason-lspconfig").setup({
-          ensure_installed = {"lua_ls", "jdtls"}
+          ensure_installed = { "lua_ls", "jdtls" },
           -- automatic_installation = true, -- Instala automaticamente LSPs faltantes
         })
-      end
+      end,
     },
     {
       "neovim/nvim-lspconfig",
       config = function()
         local lspconfig = require("lspconfig")
         lspconfig.lua_ls.setup({})
-         lspconfig.jdtls.setup({})
+        lspconfig.jdtls.setup({})
 
         -- Atalhos básicos
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
-        vim.keymap.set('n', '<leader>rr', vim.lsp.buf.references, {})
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
-        vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, {})
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+        vim.keymap.set("n", "<leader>rr", vim.lsp.buf.references, {})
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, {})
+        vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, {})
 
-   
         vim.diagnostic.config({
           virtual_text = {
-            prefix = '●', -- Símbolo personalizado
+            prefix = "●", -- Símbolo personalizado
             spacing = 2,
           },
           -- Melhoria visual para sinais no gutter
@@ -249,21 +242,77 @@ require("lazy").setup({
               [vim.diagnostic.severity.WARN] = " ",
               [vim.diagnostic.severity.HINT] = " ",
               [vim.diagnostic.severity.INFO] = " ",
-            }
+            },
           },
           underline = true,
           update_in_insert = false,
           severity_sort = true,
           float = {
-            border = 'rounded', -- Borda bonita para hover
-            source = 'always',
-          }
+            border = "rounded", -- Borda bonita para hover
+            source = "always",
+          },
         })
-
-      end
+      end,
     },
 
-   
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about Neotree.     ##
+    -- ##                           ##
+    -- ###############################
+
+    {
+      "nvim-neo-tree/neo-tree.nvim",
+      branch = "v3.x",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+        "MunifTanjim/nui.nvim",
+        -- Optional image support for file preview: See `# Preview Mode` for more information.
+        -- {"3rd/image.nvim", opts = {}},
+        -- OR use snacks.nvim's image module:
+        -- "folke/snacks.nvim",
+      },
+      lazy = false, -- neo-tree will lazily load itself
+      ---@module "neo-tree"
+      ---@type neotree.Config?
+      opts = {
+        filesystem = {
+          filtered_items = {
+            visible = true,    -- mostra arquivos ocultos
+            hide_dotfiles = false, -- mostra arquivos que começam com "."
+            hide_gitignored = false, -- mostra arquivos ignorados pelo git
+          },
+        },
+        -- add options here
+      },
+    },
+
+    -- ###############################
+    -- ##                           ##
+    -- ## Plugin about none-ls.     ##
+    -- ##                           ##
+    -- ###############################
+
+    {
+      "nvimtools/none-ls.nvim",
+      dependencies = {
+        "nvimtools/none-ls-extras.nvim", -- <- adiciona Isso
+      },
+      config = function()
+        local null_ls = require("null-ls")
+
+        null_ls.setup({
+          sources = {
+            null_ls.builtins.formatting.stylua,
+            -- null_ls.builtins.completion.spell,
+            require("none-ls.diagnostics.eslint"), -- requires none-ls-extras.nvim
+          },
+        })
+        vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {})
+      end,
+    },
+
     -- ###############################
     -- ##                           ##
     -- ## Plugin about Completicion.##
@@ -271,37 +320,36 @@ require("lazy").setup({
     -- ###############################
 
     {
-      'hrsh7th/nvim-cmp',
+      "hrsh7th/nvim-cmp",
       dependencies = {
-        'hrsh7th/cmp-nvim-lsp',
-        'L3MON4D3/LuaSnip',
-        'saadparwaiz1/cmp_luasnip',
+        "hrsh7th/cmp-nvim-lsp",
+        "L3MON4D3/LuaSnip",
+        "saadparwaiz1/cmp_luasnip",
       },
       config = function()
-        local cmp = require('cmp')
+        local cmp = require("cmp")
         cmp.setup({
           snippet = {
             expand = function(args)
-              require('luasnip').lsp_expand(args.body)
+              require("luasnip").lsp_expand(args.body)
             end,
           },
           mapping = cmp.mapping.preset.insert({
-            ['<C-Space>'] = cmp.mapping.complete(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ["<C-Space>"] = cmp.mapping.complete(),
+            ["<CR>"] = cmp.mapping.confirm({ select = true }),
           }),
           sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-          })
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+          }),
         })
-      end
-    }
-
+      end,
+    },
   },
 
   rocks = {
     hererocks = false, -- Desativa hererocks
-    enabled = false    -- Desativa completamente luarocks
+    enabled = false, -- Desativa completamente luarocks
   },
 
   -- Configure any other settings here. See the documentation for more details.
@@ -312,13 +360,17 @@ require("lazy").setup({
 })
 
 
+
+
+
+
 -- #############################
 -- ##                         ##
 -- ## About NeoVim options !  ##
 -- ##                         ##
 -- #############################
 
-vim.cmd [[colorscheme tokyonight-night]]
+vim.cmd([[colorscheme tokyonight-night]])
 
 -- Basic settings
 vim.o.relativenumber = true
@@ -338,32 +390,60 @@ vim.opt.expandtab = true -- Converte tabs em espaços
 -- vim.opt.autoident = true
 
 -- Search settings
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
+-- vim.opt.ignorecase = true
+-- vim.opt.smartcase = false
+-- vim.opt.hlsearch = false
+-- vim.opt.incsearch = true
+vim.cmd("set ignorecase smartcase")
+
+-- neotree
+vim.keymap.set("n", "<leader>nn", ":Neotree toggle<CR>", { desc = "Abrir Neo-tree" })
+-- 'H' Toggle to hidden files.
+
+
+-- Have fun with buffers.
+vim.keymap.set("n", "<leader>ls", function()
+  local buffers = {}
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_name(buf) ~= "" then
+      table.insert(buffers, {
+        buf = buf,
+        name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t"),
+      })
+    end
+  end
+  vim.ui.select(buffers, {
+    prompt = "Selecione um buffer:",
+    format_item = function(item)
+      return string.format("[%d] %s", item.buf, item.name)
+    end,
+  }, function(choice)
+      if choice then
+        vim.cmd("buffer " .. choice.buf)
+      end
+    end)
+end, { desc = "Listar buffers (nativo)" })
+
+
 
 
 -- Split behavior
 vim.opt.wrap = false -- Não quebra linhas
 vim.opt.linebreak = true -- Quebra em palavras quando wrap for ativado
-vim.opt.showbreak = '↪ ' -- Símbolo para quebras
+vim.opt.showbreak = "↪ " -- Símbolo para quebras
 vim.opt.sidescroll = 5 -- Scroll horizontal suave
 vim.opt.listchars:append({
-  extends = '›', -- Indicador de continuação à direita
-  precedes = '‹', -- Indicador de continuação à esquerda
+  extends = "›", -- Indicador de continuação à direita
+  precedes = "‹", -- Indicador de continuação à esquerda
 })
 
-vim.keymap.set('n', 'zl', '5zl', { desc = 'Scroll horizontal para esquerda' })
-vim.keymap.set('n', 'zh', '5zh', { desc = 'Scroll horizontal para direita' })
-vim.keymap.set('n', 'zL', 'zL', { desc = 'Scroll horizontal amplo para esquerda' })
-vim.keymap.set('n', 'zH', 'zH', { desc = 'Scroll horizontal amplo para direita' })
+vim.keymap.set("n", "zl", "5zl", { desc = "Scroll horizontal para esquerda" })
+vim.keymap.set("n", "zh", "5zh", { desc = "Scroll horizontal para direita" })
+vim.keymap.set("n", "zL", "zL", { desc = "Scroll horizontal amplo para esquerda" })
+vim.keymap.set("n", "zH", "zH", { desc = "Scroll horizontal amplo para direita" })
 
 vim.opt.splitbelow = true -- Horizontal splits go below
 vim.opt.splitright = true -- Vertical splits go right
-
-
-
 
 -- Window appearance
 vim.opt.winblend = 10        -- Transparência em janelas flutuantes
@@ -371,13 +451,13 @@ vim.opt.pumblend = 10        -- Transparência no menu de autocompletar
 vim.opt.termguicolors = true -- Habilita cores verdadeiras (24-bit)
 
 vim.opt.fillchars:append({
-  horiz = '━', -- Barra horizontal
-  horizup = '┻', -- Canto superior
-  horizdown = '┳', -- Canto inferior
-  vert = '▌', -- Barra vertical
-  vertleft = '┫', -- Canto esquerdo
-  vertright = '┣', -- Canto direito
-  verthoriz = '╋', -- Cruzamento
+  horiz = "━", -- Barra horizontal
+  horizup = "┻", -- Canto superior
+  horizdown = "┳", -- Canto inferior
+  vert = "▌", -- Barra vertical
+  vertleft = "┫", -- Canto esquerdo
+  vertright = "┣", -- Canto direito
+  verthoriz = "╋", -- Cruzamento
 })
 
 -- vim.opt.winbar = "%=%m %f"  -- Opcional: melhora a barra superior da janela
@@ -392,11 +472,11 @@ vim.opt.listchars = {
   trail = "·",
   nbsp = "␣",
   extends = "⟩",
-  precedes = "⟨"
+  precedes = "⟨",
 }
 
 -- Ajustes específicos para tokyonight
-vim.cmd [[
+vim.cmd([[
   " highlight ColorColumn guibg=#3b4261
   " highlight CursorLine guibg=#3b4261
   " highlight! link CursorLineNr Normal
@@ -409,18 +489,15 @@ vim.cmd [[
   " Para versão noturna do tokyonight:
   highlight WinSeparator guifg=#3b4261 guibg=NONE
 
-
   " StatusLine principal (janela ativa)
 
-  
   highlight StatusLine guibg=#afb3db guifg=#1d3975 gui=bold
   " StatusLine não ativo
   highlight StatusLineNC guibg=#16161e guifg=#3b4261
   " Separador
   highlight StatusLineSeparator guifg=#7aa2f7
 
-]]
-
+]])
 
 -- Smooth scrolling
 vim.opt.smoothscroll = true
@@ -429,7 +506,7 @@ vim.opt.smoothscroll = true
 vim.opt.diffopt:append("vertical") -- Diff em vertical
 vim.opt.fillchars:append({
   diff = "╱",
-  eob = " " -- Remove ~ no final do buffer
+  eob = " ", -- Remove ~ no final do buffer
 })
 
 -- #############################
@@ -440,18 +517,16 @@ vim.opt.fillchars:append({
 
 vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Move lines up/down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
 
 -- Splitting & Resizing
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
@@ -461,10 +536,8 @@ vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window heig
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
-
 -- Adding sens to the 'J'
 vim.keymap.set("n", "<A-j>", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
-
 
 -- Adding 'space' character to the current line
 vim.keymap.set("n", "<S-a>", function()
@@ -478,17 +551,12 @@ vim.keymap.set("n", "<S-a>", function()
   vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + 1 })
 end)
 
-
 -- Copy Full File-Path
 vim.keymap.set("n", "<leader>pa", function()
   local path = vim.fn.expand("%:p")
   vim.fn.setreg("+", path)
   print("file:", path)
 end)
-
-
-
-
 
 -- ########################
 -- ##                    ##
@@ -497,7 +565,6 @@ end)
 -- ########################
 local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 
-
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup,
@@ -505,7 +572,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
 })
-
 
 -- Return to last edit position when opening files
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -529,11 +595,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 --   end,
 -- })
 
-
-
-
-
-
 -- ######################################
 -- ##                                  ##
 -- ## FloatingTerminal configuration ! ##
@@ -543,7 +604,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 local terminal_state = {
   buf = nil,
   win = nil,
-  is_open = false
+  is_open = false,
 }
 
 local function FloatingTerminal()
@@ -558,7 +619,7 @@ local function FloatingTerminal()
   if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
     terminal_state.buf = vim.api.nvim_create_buf(false, true)
     -- Set buffer options for better terminal experience
-    vim.api.nvim_buf_set_option(terminal_state.buf, 'bufhidden', 'hide')
+    vim.api.nvim_buf_set_option(terminal_state.buf, "bufhidden", "hide")
   end
 
   -- Calculate window dimensions
@@ -569,25 +630,28 @@ local function FloatingTerminal()
 
   -- Create the floating window
   terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
-    relative = 'editor',
+    relative = "editor",
     width = width,
     height = height,
     row = row,
     col = col,
-    style = 'minimal',
-    border = 'rounded',
+    style = "minimal",
+    border = "rounded",
   })
 
   -- Set transparency for the floating window
-  vim.api.nvim_win_set_option(terminal_state.win, 'winblend', 0)
+  vim.api.nvim_win_set_option(terminal_state.win, "winblend", 0)
 
   -- Set transparent background for the window
-  vim.api.nvim_win_set_option(terminal_state.win, 'winhighlight',
-    'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder')
+  vim.api.nvim_win_set_option(
+    terminal_state.win,
+    "winhighlight",
+    "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
+  )
 
   -- Define highlight groups for transparency
   vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
-  vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none", })
+  vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
 
   -- Start terminal if not already running
   local has_terminal = false
@@ -615,7 +679,7 @@ local function FloatingTerminal()
         terminal_state.is_open = false
       end
     end,
-    once = true
+    once = true,
   })
 end
 
@@ -628,17 +692,18 @@ local function CloseFloatingTerminal()
 end
 
 -- Key mappings
-vim.keymap.set("n", "<leader>ft", FloatingTerminal, { noremap = true, silent = true, desc = "Toggle floating terminal" })
+vim.keymap.set(
+  "n",
+  "<leader>ft",
+  FloatingTerminal,
+  { noremap = true, silent = true, desc = "Toggle floating terminal" }
+)
 vim.keymap.set("t", "<Esc>", function()
   if terminal_state.is_open then
     vim.api.nvim_win_close(terminal_state.win, false)
     terminal_state.is_open = false
   end
 end, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
-
-
-
-
 
 
 -- #################################
@@ -649,8 +714,7 @@ end, { noremap = true, silent = true, desc = "Close floating terminal from termi
 
 -- Tab display settings
 vim.opt.showtabline = 1 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
-vim.opt.tabline = ''    -- Use default tabline (empty string uses built-in)
-
+vim.opt.tabline = ""    -- Use default tabline (empty string uses built-in)
 
 -- Transparent tabline appearance
 vim.cmd([[
@@ -658,24 +722,23 @@ vim.cmd([[
 ]])
 
 -- Alternative navigation (more intuitive)
-vim.keymap.set('n', '<leader>	', ':tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', '<leader>q', ':tabclose<CR>', { desc = 'Close tab' })
-
+vim.keymap.set("n", "<leader>	", ":tabnew<CR>", { desc = "New tab" })
+vim.keymap.set("n", "<leader>q", ":tabclose<CR>", { desc = "Close tab" })
 
 -- Navegação entre tabs com tratamento de erros e feedback visual
 for i = 1, 9 do
-  vim.keymap.set('n', '<A-' .. i .. '>', function()
-    local total_tabs = vim.fn.tabpagenr('$')
+  vim.keymap.set("n", "<A-" .. i .. ">", function()
+    local total_tabs = vim.fn.tabpagenr("$")
 
     if i <= total_tabs then
-      vim.cmd(i .. 'tabnext')
+      vim.cmd(i .. "tabnext")
 
       -- Feedback visual discreto (opcional)
       vim.defer_fn(function()
         vim.notify("Tab " .. i .. "/" .. total_tabs, vim.log.levels.INFO, {
           title = "Navegação",
           timeout = 800,
-          icon = ""
+          icon = "",
         })
       end, 50)
     else
@@ -683,88 +746,79 @@ for i = 1, 9 do
       vim.notify("Tab " .. i .. " não existe (máx: " .. total_tabs .. ")", vim.log.levels.WARN, {
         title = "Navegação de Tabs",
         timeout = 2000,
-        icon = "⚠️"
+        icon = "⚠️",
       })
 
       -- Pisca a tab atual como feedback
-      local original_color = vim.api.nvim_get_hl_by_name('TabLineSel', true)
-      vim.api.nvim_set_hl(0, 'TabLineSel', { bg = '#ff0000', fg = original_color.fg })
+      local original_color = vim.api.nvim_get_hl_by_name("TabLineSel", true)
+      vim.api.nvim_set_hl(0, "TabLineSel", { bg = "#ff0000", fg = original_color.fg })
       vim.defer_fn(function()
-        vim.api.nvim_set_hl(0, 'TabLineSel', original_color)
+        vim.api.nvim_set_hl(0, "TabLineSel", original_color)
       end, 300)
     end
-  end, { desc = 'Ir para Tab ' .. i })
+  end, { desc = "Ir para Tab " .. i })
 end
 
-
 -- Tab moving
-vim.keymap.set('n', '<leader>tm', ':tabmove<CR>', { desc = 'Move tab' })
-vim.keymap.set('n', '<leader>t>', ':tabmove +1<CR>', { desc = 'Move tab right' })
-vim.keymap.set('n', '<leader>t<', ':tabmove -1<CR>', { desc = 'Move tab left' })
-
+vim.keymap.set("n", "<leader>tm", ":tabmove<CR>", { desc = "Move tab" })
+vim.keymap.set("n", "<leader>t>", ":tabmove +1<CR>", { desc = "Move tab right" })
+vim.keymap.set("n", "<leader>t<", ":tabmove -1<CR>", { desc = "Move tab left" })
 
 -- Function to open file in new tab
 local function open_file_in_tab()
-  vim.ui.input({ prompt = 'File to open in new tab: ', completion = 'file' }, function(input)
-    if input and input ~= '' then
-      vim.cmd('tabnew ' .. input)
+  vim.ui.input({ prompt = "File to open in new tab: ", completion = "file" }, function(input)
+    if input and input ~= "" then
+      vim.cmd("tabnew " .. input)
     end
   end)
 end
 
-
 -- Function to duplicate current tab
 local function duplicate_tab()
-  local current_file = vim.fn.expand('%:p')
-  if current_file ~= '' then
-    vim.cmd('tabnew ' .. current_file)
+  local current_file = vim.fn.expand("%:p")
+  if current_file ~= "" then
+    vim.cmd("tabnew " .. current_file)
   else
-    vim.cmd('tabnew')
+    vim.cmd("tabnew")
   end
 end
-
 
 -- Function to close tabs to the right
 local function close_tabs_right()
   local current_tab = vim.fn.tabpagenr()
-  local last_tab = vim.fn.tabpagenr('$')
+  local last_tab = vim.fn.tabpagenr("$")
 
   for i = last_tab, current_tab + 1, -1 do
-    vim.cmd(i .. 'tabclose')
+    vim.cmd(i .. "tabclose")
   end
 end
-
 
 -- Function to close tabs to the left
 local function close_tabs_left()
   local current_tab = vim.fn.tabpagenr()
 
   for i = current_tab - 1, 1, -1 do
-    vim.cmd('1tabclose')
+    vim.cmd("1tabclose")
   end
 end
 
 -- Enhanced keybindings
-vim.keymap.set('n', '<leader>tO', open_file_in_tab, { desc = 'Open file in new tab' })
-vim.keymap.set('n', '<leader>td', duplicate_tab, { desc = 'Duplicate current tab' })
-vim.keymap.set('n', '<leader>tr', close_tabs_right, { desc = 'Close tabs to the right' })
-vim.keymap.set('n', '<leader>tL', close_tabs_left, { desc = 'Close tabs to the left' })
+vim.keymap.set("n", "<leader>tO", open_file_in_tab, { desc = "Open file in new tab" })
+vim.keymap.set("n", "<leader>td", duplicate_tab, { desc = "Duplicate current tab" })
+vim.keymap.set("n", "<leader>tr", close_tabs_right, { desc = "Close tabs to the right" })
+vim.keymap.set("n", "<leader>tL", close_tabs_left, { desc = "Close tabs to the left" })
 
 -- Function to close buffer but keep tab if it's the only buffer in tab
 local function smart_close_buffer()
   local buffers_in_tab = #vim.fn.tabpagebuflist()
   if buffers_in_tab > 1 then
-    vim.cmd('bdelete')
+    vim.cmd("bdelete")
   else
     -- If it's the only buffer in tab, close the tab
-    vim.cmd('tabclose')
+    vim.cmd("tabclose")
   end
 end
-vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buffer/tab' })
-
-
-
-
+vim.keymap.set("n", "<leader>bd", smart_close_buffer, { desc = "Smart close buffer/tab" })
 
 
 -- ###############################
@@ -773,35 +827,29 @@ vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buff
 -- ##                           ##
 -- ###############################
 
-local builtin = require('telescope.builtin')
+local builtin = require("telescope.builtin")
 require("telescope").load_extension("file_browser")
 
-
-vim.keymap.set('n', '<leader>p', function()
+vim.keymap.set("n", "<leader>p", function()
   builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
-end, { desc = 'Buscar arquivos na pasta do arquivo atual' })
+end, { desc = "Buscar arquivos na pasta do arquivo atual" })
 
-
-vim.keymap.set('n', '<leader>bs', function()
-  local path = vim.fn.expand('%:p:h:h') -- sobe duas pastas
-  require('telescope.builtin').grep_string({
+vim.keymap.set("n", "<leader>bs", function()
+  local path = vim.fn.expand("%:p:h:h") -- sobe duas pastas
+  require("telescope.builtin").grep_string({
     search = vim.fn.input("Grep > "),
     cwd = path,
   })
 end, { desc = "Grep na pasta 2 níveis acima" })
 
-
 vim.keymap.set("n", "<leader>bh", function()
   require("telescope").extensions.file_browser.file_browser({
     path = vim.fn.expand("%:p:h"),
     select_buffer = true,
-    hidden = true,    -- Mostra arquivos ocultos
+    hidden = true,  -- Mostra arquivos ocultos
     no_ignore = true, -- Ignora arquivos não-ocultos (mostra SÓ os ocultos)
   })
 end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
-
-
-
 
 
 -- ###########################################
@@ -810,8 +858,6 @@ end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
 -- ##                                       ##
 -- ###########################################
 vim.opt.clipboard = "unnamedplus"
-
-
 
 -- ###########################
 -- ##                       ##
@@ -826,12 +872,16 @@ harpoon.setup({
   menu = {
     width = 60,
     height = 20,
-  }
+  },
 })
 
 -- Atalhos ESSENCIAIS
-vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Adicionar arquivo" })
-vim.keymap.set("n", "<leader>m", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Menu Harpoon" })
+vim.keymap.set("n", "<leader>a", function()
+  harpoon:list():add()
+end, { desc = "Adicionar arquivo" })
+vim.keymap.set("n", "<leader>m", function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = "Menu Harpoon" })
 
 -- REMOVER ÚLTIMO ARQUIVO (solução definitiva)
 vim.keymap.set("n", "<leader>r", function()
@@ -844,16 +894,11 @@ vim.keymap.set("n", "<leader>r", function()
   end
 end, { desc = "Remover último arquivo" })
 
-
-
 -- REMOVER ARQUIVO ATUAL (opcional)
 vim.keymap.set("n", "<leader>d", function()
   local current_file = vim.api.nvim_buf_get_name(0)
   harpoon:list():remove(current_file)
 end, { desc = "Remover arquivo atual" })
-
-
-
 
 
 -- ############################
@@ -864,64 +909,3 @@ end, { desc = "Remover arquivo atual" })
 
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 
-
-
-
-
-
--- #######################
--- ##                   ##
--- ## Things about Lsp. ##
--- ##                   ##
--- #######################
-
-
--- local lsp = require('lspconfig')
--- local cmp_nvim_lsp = require('cmp_nvim_lsp')
---
--- -- Configuração de capabilities para autocompletion
--- local capabilities = cmp_nvim_lsp.default_capabilities()
---
--- -- Função de ativação
--- local on_attach = function(client, bufnr)
---   local opts = { buffer = bufnr, remap = false }
---
---   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
---   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
---   vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
---   vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
---   vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
---   vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
--- end
---
--- -- Configuração específica para Lua (NixOS)
--- lsp.lua_ls.setup({
---   cmd = { 'lua-language-server' }, -- Caminho completo se necessário
---   on_attach = on_attach,
---   capabilities = capabilities,
---   settings = {
---     Lua = {
---       runtime = {
---         version = 'LuaJIT',
---         path = {
---           vim.env.VIMRUNTIME,
---           -- Adicione caminhos específicos do NixOS aqui
---         }
---       },
---       workspace = {
---         checkThirdParty = false,
---         library = vim.api.nvim_get_runtime_file("", true)
---       },
---       telemetry = { enable = false }
---     }
---   }
--- })
---
---
--- -- Mapeamento manual de formatação
--- vim.keymap.set('n', '<leader>f', function()
---   vim.lsp.buf.format({ async = true })
--- end, { desc = 'Formatar código' })
---
--- -- Verificação de status
--- vim.keymap.set('n', '<leader>vl', vim.cmd.LspInfo, { desc = 'Verificar status LSP' })
