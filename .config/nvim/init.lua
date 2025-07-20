@@ -28,6 +28,44 @@ require("lazy").setup({
 
     -- ###############################
     -- ##                           ##
+    -- ## Plugin about Alpha.       ##
+    -- ##                           ##
+    -- ###############################
+
+    -- {
+    --   "goolord/alpha-nvim",
+    --   dependencies = {
+    --     "nvim-tree/nvim-web-devicons",
+    --   },
+    --   config = function()
+    --     local alpha = require("alpha")
+    --     local dashboard = require("alpha.themes.startify")
+    --
+    --     dashboard.section.header.val = {
+    --       [[                                                                       ]],
+    --       [[                                                                       ]],
+    --       [[                                                                       ]],
+    --       [[                                                                       ]],
+    --       [[                                                                     ]],
+    --       [[       ████ ██████           █████      ██                     ]],
+    --       [[      ███████████             █████                             ]],
+    --       [[      █████████ ███████████████████ ███   ███████████   ]],
+    --       [[     █████████  ███    █████████████ █████ ██████████████   ]],
+    --       [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
+    --       [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
+    --       [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
+    --       [[                                                                       ]],
+    --       [[                                                                       ]],
+    --       [[                                                                       ]],
+    --     }
+    --
+    --
+    --     alpha.setup(dashboard.opts)
+    --   end,
+    -- },
+
+    -- ###############################
+    -- ##                           ##
     -- ## Plugin about colorscheme. ##
     -- ##                           ##
     -- ###############################
@@ -169,7 +207,9 @@ require("lazy").setup({
       opts = {
         highlight = { enable = true },
         indent = { enable = true },
-        auto_isntall = true,
+
+        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java" },
+
         incremental_selection = {
           enable = true,
           keymaps = {
@@ -220,7 +260,16 @@ require("lazy").setup({
       config = function()
         local lspconfig = require("lspconfig")
         lspconfig.lua_ls.setup({})
-        lspconfig.jdtls.setup({})
+        lspconfig.jdtls.setup({
+
+
+          cmd = {
+            vim.fn.expand '~/.local/share/nvim/mason/bin/jdtls'
+          },
+
+          root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw', 'pom.xml'}, { upward = true })[1]), 
+
+        })
 
         -- Atalhos básicos
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
@@ -305,8 +354,10 @@ require("lazy").setup({
         null_ls.setup({
           sources = {
             null_ls.builtins.formatting.stylua,
+            -- null_ls.builtins.formatting.google_java_format, -- Java
+
             -- null_ls.builtins.completion.spell,
-            require("none-ls.diagnostics.eslint"), -- requires none-ls-extras.nvim
+            -- require("none-ls.diagnostics.eslint"), -- requires none-ls-extras.nvim
           },
         })
         vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {})
@@ -585,6 +636,19 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
+-- Auto-create tabs for new buffers
+vim.api.nvim_create_autocmd("BufAdd", {
+  group = augroup,
+  callback = function()
+    -- Only create new tab if we're not already in a tab page
+    -- and it's not a special buffer (help, quickfix, etc.)
+    local buftype = vim.bo.buftype
+    if vim.fn.tabpagenr("$") == 1 and buftype == "" then
+      vim.cmd("tabnew")
+    end
+  end,
+})
+
 -- -- Disable line numbers in terminal
 -- vim.api.nvim_create_autocmd("TermOpen", {
 --   group = augroup,
@@ -723,7 +787,28 @@ vim.cmd([[
 
 -- Alternative navigation (more intuitive)
 vim.keymap.set("n", "<leader>	", ":tabnew<CR>", { desc = "New tab" })
-vim.keymap.set("n", "<leader>q", ":tabclose<CR>", { desc = "Close tab" })
+-- vim.keymap.set("n", "<leader>q", ":tabclose<CR>", { desc = "Close tab" })
+
+vim.keymap.set("n", "<leader>q", function()
+  local bufname = vim.fn.expand("%:p") -- Caminho completo do buffer
+  local bufnum = vim.fn.bufnr()        -- Número do buffer atual
+
+  -- Se houver alterações não salvas
+  if vim.bo.modified then
+    vim.cmd("write") -- Salva o buffer
+  end
+
+  -- Fecha o buffer pelo nome (força o fechamento mesmo se modificado)
+  vim.cmd("bd! " .. bufnum)
+
+  print("Buffer deleted: " .. bufname)
+  -- Mostra mensagem de confirmação
+  -- vim.notify("Buffer deletado: " .. bufname, vim.log.levels.WARN, {
+  --   title = "Buffer Management",
+  --   icon = "✗",
+  --   timeout = 2000
+  -- })
+end, { desc = "Salvar e deletar buffer atual" })
 
 -- Navegação entre tabs com tratamento de erros e feedback visual
 for i = 1, 9 do
