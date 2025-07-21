@@ -337,6 +337,7 @@ require("lazy").setup({
       },
     },
 
+
     -- ###############################
     -- ##                           ##
     -- ## Plugin about none-ls.     ##
@@ -409,8 +410,6 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = true },
 })
-
-
 
 
 
@@ -636,18 +635,136 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Auto-create tabs for new buffers
-vim.api.nvim_create_autocmd("BufAdd", {
-  group = augroup,
-  callback = function()
-    -- Only create new tab if we're not already in a tab page
-    -- and it's not a special buffer (help, quickfix, etc.)
-    local buftype = vim.bo.buftype
-    if vim.fn.tabpagenr("$") == 1 and buftype == "" then
-      vim.cmd("tabnew")
-    end
-  end,
-})
+
+-- Substitua o autocomando BufAdd existente por este:
+-- vim.api.nvim_create_autocmd("BufAdd", {
+--   group = augroup,
+--   callback = function()
+--     local buftype = vim.bo.buftype
+--     local bufname = vim.api.nvim_buf_get_name(0)
+--     
+--     -- Não criar tab para:
+--     -- 1. Buffers especiais (help, quickfix, etc.)
+--     -- 2. Quando o buffer foi aberto pelo terminal (arglist)
+--     -- 3. NeoTree
+--     -- 4. Primeiro buffer da sessão
+--     if buftype == "" and 
+--        not vim.startswith(bufname, "neo-tree") and
+--        not vim.tbl_contains(vim.fn.argv(), bufname) then
+--       
+--       -- Conta quantos buffers normais existem
+--       local normal_buffers = 0
+--       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+--         if vim.api.nvim_buf_is_loaded(buf) and 
+--            vim.api.nvim_buf_get_option(buf, "buftype") == "" and
+--            not vim.startswith(vim.api.nvim_buf_get_name(buf), "neo-tree") then
+--           normal_buffers = normal_buffers + 1
+--         end
+--       end
+--
+--       -- Só cria nova tab se já houver pelo menos 1 buffer normal
+--       if normal_buffers > 1 then
+--         -- Verifica se o buffer já está aberto em outra tab
+--         local buf_already_open = false
+--         for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+--           local win = vim.api.nvim_tabpage_get_win(tab)
+--           local tab_buf = vim.api.nvim_win_get_buf(win)
+--           if tab_buf == vim.api.nvim_get_current_buf() and tab ~= vim.api.nvim_get_current_tabpage() then
+--             buf_already_open = true
+--             break
+--           end
+--         end
+--         
+--         if not buf_already_open then
+--           vim.cmd("tabnew")
+--         end
+--       end
+--     end
+--   end,
+-- })
+
+
+-- -- Tabela para mapear atalhos para buffers
+-- local buffer_shortcuts = {}
+--
+-- -- Função para atualizar os atalhos
+-- local function update_shortcuts()
+--   -- Limpa os atalhos anteriores
+--   buffer_shortcuts = {}
+--
+--   -- Pega todos buffers válidos (arquivos abertos)
+--   local valid_buffers = {}
+--   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+--     if vim.api.nvim_buf_is_valid(buf) and 
+--        vim.api.nvim_buf_get_option(buf, "buftype") == "" and
+--        vim.api.nvim_buf_get_name(buf) ~= "" then
+--       table.insert(valid_buffers, buf)
+--     end
+--   end
+--
+--   -- Atribui os primeiros 9 buffers aos atalhos
+--   for i = 1, math.min(9, #valid_buffers) do
+--     buffer_shortcuts[i] = valid_buffers[i]
+--   end
+-- end
+--
+-- -- Cria atalhos Alt+1 a Alt+9
+-- for i = 1, 9 do
+--   vim.keymap.set('n', '<A-'..i..'>', function()
+--     if buffer_shortcuts[i] and vim.api.nvim_buf_is_valid(buffer_shortcuts[i]) then
+--       vim.api.nvim_set_current_buf(buffer_shortcuts[i])
+--     else
+--       print("Atalho "..i.." não está atribuído a nenhum buffer")
+--     end
+--   end, {desc = "Ir para buffer no atalho "..i})
+-- end
+--
+-- -- Atualiza atalhos quando buffers mudam
+-- vim.api.nvim_create_autocmd({"BufAdd", "BufDelete"}, {
+--   group = vim.api.nvim_create_augroup("BufferShortcuts", {clear = true}),
+--   callback = update_shortcuts
+-- })
+--
+-- -- Comando para visualizar os atalhos
+-- vim.api.nvim_create_user_command("BufferShortcuts", function()
+--   print("Atalhos de buffer (Alt+1 a Alt+9):")
+--   for i, buf in pairs(buffer_shortcuts) do
+--     if vim.api.nvim_buf_is_valid(buf) then
+--       local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
+--       print("Alt+"..i.." -> "..name)
+--     end
+--   end
+-- end, {})
+--
+-- -- Atualiza os atalhos no início
+-- update_shortcuts()
+
+
+
+-- Atualize também o mapeamento <leader>q para fechar a tab corretamente:
+-- vim.keymap.set("n", "<leader>q", function()
+--   local bufname = vim.fn.expand("%:p")
+--   local bufnum = vim.fn.bufnr()
+--   
+--   if vim.bo.modified then
+--     vim.cmd("write")
+--   end
+--   
+--   -- Fecha o buffer
+--   vim.cmd("bd! " .. bufnum)
+--   
+--   -- Se a tab ficou vazia após fechar o buffer, fecha a tab também
+--   if #vim.api.nvim_tabpage_list_wins(0) == 1 and 
+--      vim.api.nvim_win_get_buf(0) == vim.fn.bufnr("[No Name]") then
+--     vim.cmd("tabclose")
+--   end
+--   
+--   print("Buffer deletado: " .. bufname)
+-- end, { desc = "Salvar e deletar buffer atual" })
+
+-- MODIFICAÇÃO DO <leader>q PARA REMOVER DO HARPOON ANTES DE DELETAR
+
+
 
 -- -- Disable line numbers in terminal
 -- vim.api.nvim_create_autocmd("TermOpen", {
@@ -811,38 +928,38 @@ vim.keymap.set("n", "<leader>q", function()
 end, { desc = "Salvar e deletar buffer atual" })
 
 -- Navegação entre tabs com tratamento de erros e feedback visual
-for i = 1, 9 do
-  vim.keymap.set("n", "<A-" .. i .. ">", function()
-    local total_tabs = vim.fn.tabpagenr("$")
-
-    if i <= total_tabs then
-      vim.cmd(i .. "tabnext")
-
-      -- Feedback visual discreto (opcional)
-      vim.defer_fn(function()
-        vim.notify("Tab " .. i .. "/" .. total_tabs, vim.log.levels.INFO, {
-          title = "Navegação",
-          timeout = 800,
-          icon = "",
-        })
-      end, 50)
-    else
-      -- Mensagem amigável para tab inexistente
-      vim.notify("Tab " .. i .. " não existe (máx: " .. total_tabs .. ")", vim.log.levels.WARN, {
-        title = "Navegação de Tabs",
-        timeout = 2000,
-        icon = "⚠️",
-      })
-
-      -- Pisca a tab atual como feedback
-      local original_color = vim.api.nvim_get_hl_by_name("TabLineSel", true)
-      vim.api.nvim_set_hl(0, "TabLineSel", { bg = "#ff0000", fg = original_color.fg })
-      vim.defer_fn(function()
-        vim.api.nvim_set_hl(0, "TabLineSel", original_color)
-      end, 300)
-    end
-  end, { desc = "Ir para Tab " .. i })
-end
+-- for i = 1, 9 do
+--   vim.keymap.set("n", "<A-" .. i .. ">", function()
+--     local total_tabs = vim.fn.tabpagenr("$")
+--
+--     if i <= total_tabs then
+--       vim.cmd(i .. "tabnext")
+--
+--       -- Feedback visual discreto (opcional)
+--       vim.defer_fn(function()
+--         vim.notify("Tab " .. i .. "/" .. total_tabs, vim.log.levels.INFO, {
+--           title = "Navegação",
+--           timeout = 800,
+--           icon = "",
+--         })
+--       end, 50)
+--     else
+--       -- Mensagem amigável para tab inexistente
+--       vim.notify("Tab " .. i .. " não existe (máx: " .. total_tabs .. ")", vim.log.levels.WARN, {
+--         title = "Navegação de Tabs",
+--         timeout = 2000,
+--         icon = "⚠️",
+--       })
+--
+--       -- Pisca a tab atual como feedback
+--       local original_color = vim.api.nvim_get_hl_by_name("TabLineSel", true)
+--       vim.api.nvim_set_hl(0, "TabLineSel", { bg = "#ff0000", fg = original_color.fg })
+--       vim.defer_fn(function()
+--         vim.api.nvim_set_hl(0, "TabLineSel", original_color)
+--       end, 300)
+--     end
+--   end, { desc = "Ir para Tab " .. i })
+-- end
 
 -- Tab moving
 vim.keymap.set("n", "<leader>tm", ":tabmove<CR>", { desc = "Move tab" })
@@ -960,6 +1077,21 @@ harpoon.setup({
   },
 })
 
+
+-- Função para verificar se um buffer está no Harpoon (definida localmente)
+local function is_in_harpoon(bufname)
+  local list = harpoon:list()
+  if not list or not list.items then return false end
+  
+  for _, item in ipairs(list.items) do
+    if item and item.value == bufname then
+      return true
+    end
+  end
+  return false
+end
+
+
 -- Atalhos ESSENCIAIS
 vim.keymap.set("n", "<leader>a", function()
   harpoon:list():add()
@@ -980,10 +1112,134 @@ vim.keymap.set("n", "<leader>r", function()
 end, { desc = "Remover último arquivo" })
 
 -- REMOVER ARQUIVO ATUAL (opcional)
+-- vim.keymap.set("n", "<leader>d", function()
+--   local current_file = vim.api.nvim_buf_get_name(0)
+--   harpoon:list():remove(current_file)
+-- end, { desc = "Remover arquivo atual" })
+
+-- REMOVER ARQUIVO ATUAL (opcional) - VERSÃO FINAL CORRIGIDA
 vim.keymap.set("n", "<leader>d", function()
   local current_file = vim.api.nvim_buf_get_name(0)
-  harpoon:list():remove(current_file)
-end, { desc = "Remover arquivo atual" })
+  
+  -- Verifica se é um buffer válido
+  if current_file == "" or vim.bo.buftype ~= "" then
+    vim.notify("Nenhum arquivo válido para remover", vim.log.levels.WARN)
+    return
+  end
+
+  -- Normaliza o caminho do arquivo para comparação
+  local normalized_current = vim.fn.fnamemodify(current_file, ":p")
+  
+  local list = harpoon:list()
+  if not list or not list.items then
+    vim.notify("Harpoon não inicializado corretamente", vim.log.levels.ERROR)
+    return
+  end
+
+  -- Procura pelo arquivo na lista do Harpoon
+  local found_index = nil
+  for i, item in ipairs(list.items) do
+    if item and item.value then
+      local normalized_item = vim.fn.fnamemodify(item.value, ":p")
+      if normalized_item == normalized_current then
+        found_index = i
+        break
+      end
+    end
+  end
+
+  if found_index then
+    list:remove_at(found_index)
+    vim.notify("Removido do Harpoon: "..vim.fn.fnamemodify(current_file, ":t"), vim.log.levels.INFO)
+  else
+    vim.notify("Arquivo não encontrado no Harpoon: "..vim.fn.fnamemodify(current_file, ":t"), vim.log.levels.WARN)
+  end
+end, { desc = "Remover arquivo atual do Harpoon" })
+
+
+-- MODIFICAÇÃO DO <leader>q PARA REMOVER DO HARPOON ANTES DE DELETAR (COM TRATAMENTO DE ERROS)
+vim.keymap.set("n", "<leader>q", function()
+  local bufname = vim.fn.expand("%:p")
+  local bufnum = vim.fn.bufnr()
+  
+  -- Remove do Harpoon se estiver na lista
+  if is_in_harpoon(bufname) then
+    harpoon:list():remove(bufname)
+  end
+  
+  -- Verifica se há modificações não salvas
+  if vim.bo.modified then
+    local choice = vim.fn.confirm("Salvar alterações em "..vim.fn.fnamemodify(bufname, ":t").."?", "&Sim\n&Não\n&Cancelar", 1)
+    if choice == 1 then -- Sim
+      vim.cmd("write")
+    elseif choice == 3 then -- Cancelar
+      return
+    end
+  end
+  
+  -- Fecha o buffer com tratamento de erro
+  local ok, err = pcall(vim.cmd, "silent! bd! "..bufnum)
+  if not ok then
+    vim.notify("Erro ao fechar buffer: "..tostring(err), vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Verifica se pode fechar a tab sem erros
+  if vim.fn.tabpagenr("$") > 1 then
+    pcall(vim.cmd, "tabclose")
+  end
+  
+  print("Buffer deletado: "..vim.fn.fnamemodify(bufname, ":~:."))
+end, { desc = "Salvar, remover do Harpoon e deletar buffer atual" })
+
+
+-- AUTOMATICAMENTE ADICIONAR NOVOS BUFFERS AO HARPOON
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    -- Só adiciona se for um arquivo real (não vazio e não buffer especial)
+    if bufname ~= "" and vim.bo.buftype == "" and not is_in_harpoon(bufname) then
+      -- Verifica se o arquivo já existe no sistema de arquivos
+      local file_exists = vim.fn.filereadable(bufname) == 1
+      if file_exists then
+        harpoon:list():add()
+        -- Opcional: Mostrar notificação (pode remover se não quiser)
+        vim.notify("Buffer adicionado ao Harpoon: " .. vim.fn.fnamemodify(bufname, ":t"), vim.log.levels.INFO)
+      end
+    end
+  end
+})
+
+
+-- MAPEAMENTOS ALT+1 A ALT+9 COM TRATAMENTO COMPLETO
+for i = 1, 9 do
+  vim.keymap.set("n", "<A-"..i..">", function()
+    local list = harpoon:list()
+    if not list or not list.items then
+      vim.notify("Harpoon não inicializado corretamente", vim.log.levels.ERROR)
+      return
+    end
+    
+    local item = list.items[i]
+    if not item or not item.value then
+      vim.notify("Nenhum arquivo na posição "..i.." do Harpoon", vim.log.levels.WARN)
+      return
+    end
+    
+    local current_file = vim.api.nvim_buf_get_name(0)
+    if current_file == item.value then
+      vim.notify("Você já está em: "..vim.fn.fnamemodify(item.value, ":t"), vim.log.levels.INFO)
+      return
+    end
+    
+    -- Tenta abrir o arquivo com tratamento de erro
+    local ok, err = pcall(vim.cmd, "edit "..vim.fn.fnameescape(item.value))
+    if not ok then
+      vim.notify("Erro ao abrir arquivo: "..tostring(err), vim.log.levels.ERROR)
+    end
+  end, { desc = "Abrir item "..i.." do Harpoon" })
+end
+
 
 
 -- ############################
