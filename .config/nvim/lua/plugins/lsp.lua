@@ -31,91 +31,126 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-			})
-
-			lspconfig.ast_grep.setup({})
-
-			lspconfig.jdtls.setup({
-
-				capabilities = capabilities,
-
-				cmd = {
-					vim.fn.expand("~/.local/share/nvim/mason/bin/jdtls"),
-				},
-
-				root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw", "pom.xml" }, { upward = true })[1]),
-			})
-
-			lspconfig.angularls.setup({
-
-				cmd = {
-					vim.fn.expand("~/.local/share/nvim/mason/bin/ngserver"),
-					"--stdio",
-					"--tsProbeLocations",
-					vim.fn.getcwd() .. "/node_modules",
-					"--ngProbeLocations",
-					vim.fn.getcwd() .. "/node_modules",
-				},
-				root_dir = util.root_pattern("angular.json"),
-				on_new_config = function(new_config, new_root_dir)
-					local function get_probe_dir(root_dir)
-						local project_root =
-							vim.fs.dirname(vim.fs.find("node_modules", { path = root_dir, upward = true })[1])
-						return project_root and (project_root .. "/node_modules") or ""
-					end
-
-					local function get_angular_core_version(root_dir)
-						local project_root =
-							vim.fs.dirname(vim.fs.find("node_modules", { path = root_dir, upward = true })[1])
-						if not project_root then
-							return ""
-						end
-
-						local package_json = project_root .. "/package.json"
-						if not vim.uv.fs_stat(package_json) then
-							return ""
-						end
-
-						local contents = io.open(package_json):read("*a")
-						local json = vim.json.decode(contents)
-						if not json.dependencies then
-							return ""
-						end
-
-						local angular_core_version = json.dependencies["@angular/core"]
-						return angular_core_version and angular_core_version:match("%d+%.%d+%.%d+") or ""
-					end
-
-					local probe_dir = get_probe_dir(new_root_dir)
-					local angular_version = get_angular_core_version(new_root_dir)
-
-					new_config.cmd = {
-						vim.fn.expand("~/.local/share/nvim/mason/bin/ngserver"),
-						"--stdio",
-						"--tsProbeLocations",
-						probe_dir,
-						"--ngProbeLocations",
-						probe_dir,
-						"--angularCoreVersion",
-						angular_version,
-					}
-				end,
+				-- capabilities = capabilities,
 			})
 
 			lspconfig.ts_ls.setup({
-				-- root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
-				-- capabilities = require("cmp_nvim_lsp").default_capabilities(),
-				-- settings = {
-				-- 	typescript = {
-				-- 		format = {
-				-- 			indentSize = 2,
-				-- 			convertTabsToSpaces = true,
-				-- 			tabSize = 2,
-				-- 		},
-				-- 	},
-				-- },
+			-- 	capabilities = capabilities,
 			})
+
+			-- vim.lsp.enable("pyright")
+			lspconfig.pyright.setup({
+				cmd = { "pyright-langserver", "--stdio" },
+				filetypes = { "python" },
+				root_dir = util.root_pattern(
+					"pyproject.toml",
+					"setup.py",
+					"setup.cfg",
+					"requirements.txt",
+					"Pipfile",
+					"pyrightconfig.json",
+					".git"
+				),
+				-- capabilities = capabilities, -- Integração com nvim-cmp
+				-- on_attach = on_attach, -- Função de attach personalizada
+				settings = {
+					python = {
+						analysis = {
+							autoSearchPaths = true,
+							diagnosticMode = "openFilesOnly",
+							useLibraryCodeForTypes = true,
+							-- Configurações adicionais podem ser incluídas aqui
+							typeCheckingMode = "basic", -- "off", "basic", "strict"
+							diagnosticSeverityOverrides = {
+								reportUnusedVariable = "warning",
+							},
+						},
+					},
+				},
+			})
+
+			lspconfig.jdtls.setup({
+
+				-- capabilities = capabilities,
+				cmd = {
+					vim.fn.expand("~/.local/share/nvim/mason/bin/jdtls"),
+				},
+				root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw", "pom.xml" }, { upward = true })[1]),
+			})
+
+			-- lspconfig.angularls.setup({})
+
+			-- lspconfig.angularls.setup({
+			--
+			-- 	cmd = {
+			-- 		vim.fn.expand("~/.local/share/nvim/mason/bin/ngserver"),
+			-- 		"--stdio",
+			-- 		"--tsProbeLocations",
+			-- 		vim.fn.getcwd() .. "/node_modules",
+			-- 		"--ngProbeLocations",
+			-- 		vim.fn.getcwd() .. "/node_modules",
+			-- 	},
+			-- 	root_dir = util.root_pattern("angular.json"),
+			-- 	on_new_config = function(new_config, new_root_dir)
+			-- 		local function get_probe_dir(root_dir)
+			-- 			local project_root =
+			-- 				vim.fs.dirname(vim.fs.find("node_modules", { path = root_dir, upward = true })[1])
+			-- 			return project_root and (project_root .. "/node_modules") or ""
+			-- 		end
+			--
+			-- 		local function get_angular_core_version(root_dir)
+			-- 			local project_root =
+			-- 				vim.fs.dirname(vim.fs.find("node_modules", { path = root_dir, upward = true })[1])
+			-- 			if not project_root then
+			-- 				return ""
+			-- 			end
+			--
+			-- 			local package_json = project_root .. "/package.json"
+			-- 			if not vim.uv.fs_stat(package_json) then
+			-- 				return ""
+			-- 			end
+			--
+			-- 			local contents = io.open(package_json):read("*a")
+			-- 			local json = vim.json.decode(contents)
+			-- 			if not json.dependencies then
+			-- 				return ""
+			-- 			end
+			--
+			-- 			local angular_core_version = json.dependencies["@angular/core"]
+			-- 			return angular_core_version and angular_core_version:match("%d+%.%d+%.%d+") or ""
+			-- 		end
+			--
+			-- 		local probe_dir = get_probe_dir(new_root_dir)
+			-- 		local angular_version = get_angular_core_version(new_root_dir)
+			--
+			-- 		new_config.cmd = {
+			-- 			vim.fn.expand("~/.local/share/nvim/mason/bin/ngserver"),
+			-- 			"--stdio",
+			-- 			"--tsProbeLocations",
+			-- 			probe_dir,
+			-- 			"--ngProbeLocations",
+			-- 			probe_dir,
+			-- 			"--angularCoreVersion",
+			-- 			angular_version,
+			-- 		}
+			-- 	end,
+			-- })
+
+			-- lspconfig.ts_ls.setup({})
+
+			-- lspconfig.ts_ls.setup({
+			-- 	-- root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+			-- 	-- capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			-- 	-- settings = {
+			-- 	-- 	typescript = {
+			-- 	-- 		format = {
+			-- 	-- 			indentSize = 2,
+			-- 	-- 			convertTabsToSpaces = true,
+			-- 	-- 			tabSize = 2,
+			-- 	-- 		},
+			-- 	-- 	},
+			-- 	-- },
+			-- })
 
 			vim.diagnostic.config({
 				virtual_text = {
