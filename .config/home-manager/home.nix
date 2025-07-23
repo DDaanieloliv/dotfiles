@@ -20,27 +20,39 @@
     shellAliases = {
       btw = "echo I_use 󱄅 BTW";
       vim = "nvim";
+			l = "ls -la";
     };
     initExtra = ''
 
       # 󱈸󰋖
 
+			# ~/.bashrc ou ~/.bash_profile
+			# if command -v tmux >/dev/null 2>&1; then
+			#   # Só executa se for uma shell interativa e estiver em terminal real (evita problemas com VSCode, etc)
+			#   if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
+			#     tmux attach -t main || tmux new -s main
+			#   fi
+			# fi
+
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+
       if [ -f "$HOME/.cargo/env" ]; then
         source "$HOME/.cargo/env"
       fi
+
+      if [ -f "$HOME/.node_env" ]; then
+        source "$HOME/.node_env"
+      fi
+
 
       if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
         export SDKMAN_DIR="$HOME/.sdkman"
         source "$HOME/.sdkman/bin/sdkman-init.sh"
       fi
 
-      # ~/.bashrc ou ~/.bash_profile
-      # if command -v tmux >/dev/null 2>&1; then
-      #   # Só executa se for uma shell interativa e estiver em terminal real (evita problemas com VSCode, etc)
-      #   if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -n "$PS1" ]]; then
-      #     tmux attach -t main || tmux new -s main
-      #   fi
-      # fi
 
       if [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; then
         source "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
@@ -82,6 +94,39 @@
       }
 
 
+ # Configuração do timer (VERSÃO DEFINITIVA)
+    __timer_start() {
+      __timer=''${__timer:-$SECONDS}
+    }
+
+    __timer_stop() {
+      local exit_code=$?
+      __timer_show=$((SECONDS - __timer))
+      unset __timer
+      
+      if [[ -n "$__timer_show" && "$__timer_show" -ge 1 ]]; then
+        # Texto completo com ícone ( é o ícone de relógio)
+        local timer_text=" ''${__timer_show}s"
+        # Calcula o tamanho REAL (considerando caracteres unicode)
+        local timer_length=$(printf "%s" "$timer_text" | wc -m)
+        local cols=$(tput cols)
+        
+        # Posicionamento à prova de quebras:
+        printf "\033[s"               # Salva posição
+        printf "\033[1A"              # Sobe para a linha do output
+        printf "\033[''${cols}G"      # Vai para o canto direito absoluto
+        printf "\033[''${timer_length}D" # Retrocede exatamente o necessário
+        printf "\033[38;5;242m%s" "$timer_text"  # Imprime o timer
+        printf "\033[u"               # Restaura posição
+      fi
+      
+      unset __timer_show
+      return $exit_code
+    }
+
+    trap '__timer_start' DEBUG
+    PROMPT_COMMAND=__timer_stop
+
 
       if [[ $EUID -eq 0 ]]; then
         # Prompt especial para root (com formatação igual ao usuário comum)
@@ -91,8 +136,50 @@
         export PS1="\n\n\[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\$(get_git_info)\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
       fi
 
+
     '';
   };
+
+
+
+    # # Configuração do timer
+    # __timer_start() {
+    #   __timer=''${__timer:-$SECONDS}
+    # }
+    #
+    # __timer_stop() {
+    #   local exit_code=$?
+    #   __timer_show=$((SECONDS - __timer))
+    #   unset __timer
+    #   
+    #   # Só mostra se o comando demorou mais que 1 segundo
+    #   if [[ -n "$__timer_show" && "$__timer_show" -ge 1 ]]; then
+    #     # Calcula o texto do timer (incluindo o ícone)
+    #     local timer_text=" ''${__timer_show}s"
+    #     local timer_length=''${#timer_text}
+    #     local cols=$(tput cols)
+    #     
+    #     # Salva a posição do cursor
+    #     printf "\033[s"
+    #     # Move para a linha atual do comando
+    #     printf "\033[$(($(wc -l <<<"$PS1")+1))A"
+    #     # Move para o canto direito absoluto
+    #     printf "\033[''${cols}G"
+    #     # Retrocede o necessário para mostrar o timer com ícone
+    #     printf "\033[''${timer_length}D"
+    #     # Mostra o tempo com ícone em cinza
+    #     printf "\033[38;5;242m''${timer_text}"
+    #     # Restaura a posição do cursor
+    #     printf "\033[u"
+    #   fi
+    #   
+    #   unset __timer_show
+    #   return $exit_code
+    # }
+    #
+    # trap '__timer_start' DEBUG
+    # PROMPT_COMMAND=__timer_stop
+
 
   programs.tmux = {
     enable = true;
@@ -216,17 +303,18 @@
     font-awesome
     noto-fonts
     noto-fonts-emoji
-     
+
     mesa # Já inclui OpenGL e Vulkan
     libva-utils # Para vainfo 
     htop
     cava
+    chafa
     tree
     nitch
     ripgrep
+    xclip
     lua-language-server
     lm_sensors
-
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
       home="$HOME"
@@ -267,6 +355,7 @@
         fi
       fi
     '')
+    maven
 
    # Adds the 'hello' command to your environment. It prints a friendly
    # "Hello, world!" when run.
@@ -298,6 +387,8 @@
        background #1a1b26
        background_opacity 0.95
        
+       enable_audio_bell no
+
        # Frappé Color Scheme for Kitty Terminal
        # Base Colors
        color0 #232634
