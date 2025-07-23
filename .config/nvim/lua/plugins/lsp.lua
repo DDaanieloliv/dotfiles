@@ -30,12 +30,51 @@ return {
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+			-- lspconfig.lua_ls.setup({})
 			lspconfig.lua_ls.setup({
 				-- capabilities = capabilities,
+
+				cmd = { "lua-language-server" }, -- Usa o binário do Nix
+
+				on_init = function(client)
+					local path = client.workspace_folders and client.workspace_folders[1].name or ""
+					if not vim.startswith(path, vim.fn.stdpath('config')) then
+						return
+					end
+
+					client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua or {}, {
+						runtime = {
+							version = 'LuaJIT',
+							path = {
+								'lua/?.lua',
+								'lua/?/init.lua',
+								vim.fn.expand('~/.nix-profile/share/lua-language-server/libexec/lua-language-server') -- Caminho Nix
+							}
+						},
+						workspace = {
+							checkThirdParty = false,
+							library = {
+								vim.env.VIMRUNTIME,
+								vim.fn.stdpath('config')
+							}
+						},
+						telemetry = { enable = false }
+					})
+				end,
+
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = { 'vim' }
+						}
+					}
+				}
+
+
 			})
 
 			lspconfig.ts_ls.setup({
-			-- 	capabilities = capabilities,
+				-- 	capabilities = capabilities,
 			})
 
 			-- vim.lsp.enable("pyright")

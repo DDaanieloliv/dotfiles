@@ -54,7 +54,7 @@ vim.keymap.set("n", "<leader>ls", function()
 		end
 	end)
 end, { desc = "Listar buffers (nativo)" })
-
+  
 -- Split behavior
 vim.opt.wrap = false -- Não quebra linhas
 vim.opt.linebreak = true -- Quebra em palavras quando wrap for ativado
