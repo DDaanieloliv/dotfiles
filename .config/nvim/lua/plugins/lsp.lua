@@ -38,39 +38,37 @@ return {
 
 				on_init = function(client)
 					local path = client.workspace_folders and client.workspace_folders[1].name or ""
-					if not vim.startswith(path, vim.fn.stdpath('config')) then
+					if not vim.startswith(path, vim.fn.stdpath("config")) then
 						return
 					end
 
-					client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua or {}, {
+					client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua or {}, {
 						runtime = {
-							version = 'LuaJIT',
+							version = "LuaJIT",
 							path = {
-								'lua/?.lua',
-								'lua/?/init.lua',
-								vim.fn.expand('~/.nix-profile/share/lua-language-server/libexec/lua-language-server') -- Caminho Nix
-							}
+								"lua/?.lua",
+								"lua/?/init.lua",
+								vim.fn.expand("~/.nix-profile/share/lua-language-server/libexec/lua-language-server"), -- Caminho Nix
+							},
 						},
 						workspace = {
 							checkThirdParty = false,
 							library = {
 								vim.env.VIMRUNTIME,
-								vim.fn.stdpath('config')
-							}
+								vim.fn.stdpath("config"),
+							},
 						},
-						telemetry = { enable = false }
+						telemetry = { enable = false },
 					})
 				end,
 
 				settings = {
 					Lua = {
 						diagnostics = {
-							globals = { 'vim' }
-						}
-					}
-				}
-
-
+							globals = { "vim" },
+						},
+					},
+				},
 			})
 
 			lspconfig.ts_ls.setup({
@@ -109,7 +107,6 @@ return {
 			})
 
 			lspconfig.jdtls.setup({
-
 				-- capabilities = capabilities,
 				cmd = {
 					vim.fn.expand("~/.local/share/nvim/mason/bin/jdtls"),
