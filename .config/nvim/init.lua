@@ -165,6 +165,15 @@ vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase w
 -- Adding sens to the 'J'
 vim.keymap.set("n", "<A-j>", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
 
+
+-- Abre lista de diagnósticos e permite copiar
+vim.keymap.set('n', '<leader>ld', function()
+  vim.diagnostic.setqflist()
+  vim.cmd('copen')  -- Abre a janela quickfix
+end, { desc = 'Listar diagnósticos' })
+
+-- Depois na janela quickfix, pressione 'yy' para copiar a mensagem selecionada
+
 -- Adding 'space' character to the current line
 vim.keymap.set("n", "<S-a>", function()
 	local pos = vim.api.nvim_win_get_cursor(0)
@@ -190,6 +199,16 @@ end)
 -- ## Basic autocommands ##
 -- ##                    ##
 -- ########################
+
+
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = 'java',
+--   callback = function()
+--     vim.cmd('source ~/.config/nvim/ftplugin/java.lua')
+--   end,
+-- })
+
+
 local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 
 -- Highlight yanked text
@@ -237,7 +256,7 @@ local function FloatingTerminal()
 		terminal_state.buf = vim.api.nvim_create_buf(false, true)
 
 		-- Set buffer options for better terminal experience
-		vim.api.nvim_buf_set_option(terminal_state.buf, "bufhidden", "hide")
+		vim.api.nvim_buf_set_option(terminal_state.buf, "bufhidden", "hide") -- Diagnostic: Deprecated apparently.
 	end
 
 	-- Calculate window dimensions
@@ -258,10 +277,10 @@ local function FloatingTerminal()
 	})
 
 	-- Set transparency for the floating window
-	vim.api.nvim_win_set_option(terminal_state.win, "winblend", 0)
+	vim.api.nvim_win_set_option(terminal_state.win, "winblend", 0) -- Diagnostic: Deprecated apparently.
 
 	-- Set transparent background for the window
-	vim.api.nvim_win_set_option(
+	vim.api.nvim_win_set_option( -- Diagnostic: Deprecated apparently.
 		terminal_state.win,
 		"winhighlight",
 		"Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"

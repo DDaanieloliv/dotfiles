@@ -1,60 +1,78 @@
 return {
-  {
-    "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-file-browser.nvim",
-      "nvim-telescope/telescope-ui-select.nvim"
-    },
-    config = function()
-      local telescope = require("telescope")
-      local builtin = require("telescope.builtin")
+	{
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.8",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-file-browser.nvim",
+			"nvim-telescope/telescope-ui-select.nvim",
+		},
+		config = function()
+			local telescope = require("telescope")
+			local builtin = require("telescope.builtin")
 
-      telescope.setup({
-        extensions = {
-          ["ui-select"] = {
-            require("telescope.themes").get_dropdown()
-          }
-        }
-      })
+			telescope.setup({
+				extensions = {
+					["ui-select"] = {
+						require("telescope.themes").get_dropdown(),
+					},
+				},
+			})
 
-      -- Carrega extensões
-      telescope.load_extension("file_browser")
-      telescope.load_extension("ui-select")
+			-- Carrega extensões
+			telescope.load_extension("file_browser")
+			telescope.load_extension("ui-select")
 
-      -- Mapeamentos
-      vim.keymap.set("n", "<leader>pp", function()
-        builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
-      end, { desc = "Buscar arquivos na pasta atual" })
+			-- Mapeamentos
+			vim.keymap.set("n", "<leader>pp", function()
+				builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
+			end, { desc = "Buscar arquivos na pasta atual" })
 
-      -- vim.keymap.set("n", "<leader>bh", function()
-      --   telescope.extensions.file_browser.file_browser({
-      --     path = vim.fn.expand("%:p:h"),
-      --     hidden = true,
-      --     no_ignore = true
-      --   })
-      -- end, { desc = "Abrir navegador de arquivos" })
+			-- vim.keymap.set("n", "<leader>bh", function()
+			--   telescope.extensions.file_browser.file_browser({
+			--     path = vim.fn.expand("%:p:h"),
+			--     hidden = true,
+			--     no_ignore = true
+			--   })
+			-- end, { desc = "Abrir navegador de arquivos" })
 
-      vim.keymap.set("n", "<leader>bs", function()
-        local path = vim.fn.expand("%:p:h:h") -- sobe duas pastas
-        require("telescope.builtin").grep_string({
-          search = vim.fn.input("Grep > "),
-          cwd = path,
-        })
-      end, { desc = "Grep na pasta 2 níveis acima" })
+			vim.keymap.set("n", "<leader>pf", function()
+				local cwd = vim.fn.getcwd()
+				print("Buscando em: " .. cwd) -- Mostra o path no console (opcional)
+				builtin.find_files({
+					cwd = cwd,
+					hidden = true,
+					prompt_title = "Arquivos em: " .. vim.fn.pathshorten(cwd),
+					-- prompt_title = "Arquivos em: " .. cwd, -- Mostra no prompt do Telescope
+					path_display = { "truncate" }, -- Encurta os paths longos
+					layout_config = {
+						width = 0.95,           -- Ajusta a largura da janela
+						preview_width = 0.6,    -- Ajusta a largura da pré-visualização
+					},
+				})
+			end, { desc = "Buscar arquivos no diretório atual (cd)" })
 
-      vim.keymap.set("n", "<leader>bh", function()
-        telescope.extensions.file_browser.file_browser({
-          path = vim.fn.expand("%:p:h"),
-          select_buffer = true,
-          hidden = true,  -- Mostra arquivos ocultos
-          no_ignore = true, -- Ignora arquivos não-ocultos (mostra SÓ os ocultos)
-        })
-      end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
+			vim.keymap.set("n", "<leader>bs", function()
+				local path = vim.fn.expand("%:p:h:h") -- sobe duas pastas
+				require("telescope.builtin").grep_string({
+					search = vim.fn.input("Grep > "),
+					cwd = path,
+					path_display = { "truncate" }, -- Encurta paths longos
+					layout_config = {
+						width = 0.95,
+						preview_width = 0.6,
+					},
+				})
+			end, { desc = "Grep na pasta 2 níveis acima" })
 
-
-
-    end
-  }
+			vim.keymap.set("n", "<leader>bh", function()
+				telescope.extensions.file_browser.file_browser({
+					path = vim.fn.expand("%:p:h"),
+					select_buffer = true,
+					hidden = true, -- Mostra arquivos ocultos
+					no_ignore = true, -- Ignora arquivos não-ocultos (mostra SÓ os ocultos)
+				})
+			end, { desc = "Abrir navegador de arquivos (somente ocultos)" })
+		end,
+	},
 }
