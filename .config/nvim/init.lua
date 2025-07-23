@@ -14,8 +14,8 @@ vim.opt.sidescrolloff = 8
 vim.opt.swapfile = false
 
 -- Identation
-vim.opt.tabstop = 2 -- Número de espaços que um <Tab> representa
-vim.opt.shiftwidth = 2 -- Número de espaços para indentação automática
+vim.opt.tabstop = 2       -- Número de espaços que um <Tab> representa
+vim.opt.shiftwidth = 2    -- Número de espaços para indentação automática
 vim.opt.softtabstop = 2
 vim.opt.expandtab = false -- Converte tabs em espaços
 -- vim.opt.smartident = true
@@ -54,7 +54,7 @@ vim.keymap.set("n", "<leader>ls", function()
 		end
 	end)
 end, { desc = "Listar buffers (nativo)" })
-  
+
 -- Split behavior
 vim.opt.wrap = false -- Não quebra linhas
 vim.opt.linebreak = true -- Quebra em palavras quando wrap for ativado
@@ -74,8 +74,8 @@ vim.opt.splitbelow = true -- Horizontal splits go below
 vim.opt.splitright = true -- Vertical splits go right
 
 -- Window appearance
-vim.opt.winblend = 10 -- Transparência em janelas flutuantes
-vim.opt.pumblend = 10 -- Transparência no menu de autocompletar
+vim.opt.winblend = 10        -- Transparência em janelas flutuantes
+vim.opt.pumblend = 10        -- Transparência no menu de autocompletar
 vim.opt.termguicolors = true -- Habilita cores verdadeiras (24-bit)
 
 vim.opt.fillchars:append({
@@ -89,10 +89,10 @@ vim.opt.fillchars:append({
 })
 
 -- Visual cues
-vim.opt.showmode = true -- Oculta o -- INSERT -- (já que temos statusline)
+vim.opt.showmode = true   -- Oculta o -- INSERT -- (já que temos statusline)
 vim.opt.cursorline = true -- Destaque para linha atual
 -- vim.opt.colorcolumn = "100"          -- Linha guia para limite de coluna
-vim.opt.list = true -- Mostra caracteres especiais
+vim.opt.list = true       -- Mostra caracteres especiais
 vim.opt.listchars = {
 	tab = "→ ",
 	trail = "·",
@@ -176,6 +176,7 @@ vim.keymap.set("n", "<S-a>", function()
 	end
 	vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + 1 })
 end)
+
 
 -- Copy Full File-Path
 vim.keymap.set("n", "<leader>pa", function()
