@@ -113,7 +113,7 @@ return {
 
 			lspconfig.jdtls.setup({
 				cmd = {
-					"/home/daniel/.sdkman/candidates/java/current/bin/java",
+					"java",
 					"-javaagent:/home/daniel/.local/share/java/lombok.jar", -- Corrigido aqui
 					"-jar",
 					"/home/daniel/.local/share/nvim/jdtls/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
