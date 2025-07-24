@@ -6,12 +6,41 @@ return {
 	-- ##                           ##
 	-- ###############################
 
-	"folke/tokyonight.nvim",
-	lazy = false,
-	priority = 1000,
-	config = function()
-		vim.cmd([[colorscheme tokyonight-night]])
-	end,
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd([[colorscheme tokyonight-night]])
+		end,
+	},
+
+	-- {
+	-- 	"mistweaverco/bluloco.nvim",
+	-- 	config = function()
+	-- 		require("bluloco").setup({
+	-- 			theme = "dark", -- 'dark' or 'light'
+	-- 			terminal = true, -- 'true' or 'false', set the theme variant for terminal windows
+	-- 			italic_comments = false, -- 'true' or 'false', use italic for comments
+	-- 			disable_cache = false, -- if you want to disable the caching feature
+	-- 			dev = false, -- set to true to disable cache entirely and enable hot reloading of the theme
+	--
+	-- 			vim.cmd("colorscheme bluloco"),
+	-- 		})
+	-- 	end,
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- },
+
+	-- {
+	-- 	"uloco/bluloco.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	dependencies = { "rktjmp/lush.nvim" },
+	-- 	config = function()
+	-- 		vim.cmd([[colorscheme bluloco-dark]])
+	-- 	end,
+	-- },
 
 	-- -- ###############################
 	-- -- ##                           ##

@@ -55,10 +55,10 @@ return {
 					-- 2. já não estiver no harpoon
 					-- 3. existir no sistema de arquivos
 					if
-						bufname ~= ""
-						and vim.bo.buftype == ""
-						and not is_in_harpoon(bufname)
-						and vim.fn.filereadable(bufname) == 1
+							bufname ~= ""
+							and vim.bo.buftype == ""
+							and not is_in_harpoon(bufname)
+							and vim.fn.filereadable(bufname) == 1
 					then
 						harpoon:list():add()
 					end
@@ -251,12 +251,6 @@ return {
 					end
 				end,
 			})
-
-			vim.cmd("highlight! HarpoonInactive guibg=NONE guifg=#63698c")
-			vim.cmd("highlight! HarpoonActive guibg=NONE guifg=white")
-			vim.cmd("highlight! HarpoonNumberActive guibg=NONE guifg=#7aa2f7")
-			vim.cmd("highlight! HarpoonNumberInactive guibg=NONE guifg=#7aa2f7")
-			vim.cmd("highlight! TabLineFill guibg=NONE guifg=white")
 
 			-- Desativa a adição automática de buffers ao Harpoon
 			-- (Remova o autocomando BufEnter que adiciona automaticamente)
