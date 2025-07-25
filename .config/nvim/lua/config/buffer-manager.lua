@@ -10,6 +10,13 @@ local function find_buffer_by_path(path)
 	return nil
 end
 
+-- Verifica se o buffer atual é um '[No Name]' que pode ser reutilizado
+local function is_reusable_unnamed_buffer()
+	local buf_name = vim.api.nvim_buf_get_name(0)
+	local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+	return buf_name == "" and buftype == ""
+end
+
 -- Configurações
 local cache_dir = vim.fn.stdpath("data") .. "/buffer_cache"
 local cache_file = cache_dir .. "/buffers.lua"
@@ -145,46 +152,44 @@ function M.remove_last_buffer_from_cache()
 	end
 end
 
-
 -- Limpa todo o cache exceto o buffer atual
 function M.clear_cache()
-    local current_buf = vim.api.nvim_get_current_buf()
-    local current_path = M.get_current_path()
-    local current_buf_name = vim.api.nvim_buf_get_name(current_buf)
-    
-    -- Carrega o cache atual
-    local cache = M.load_cache()
-    
-    -- Fecha e remove todos os buffers exceto o atual
-    for path, buffers in pairs(cache) do
-        -- Não limpa o path atual se estiver no mesmo diretório
-        if path ~= current_path then
-            for _, item in ipairs(buffers) do
-                local buf = find_buffer_by_path(item.path)
-                if buf and buf ~= current_buf then
-                    vim.api.nvim_buf_delete(buf, {force = true})
-                end
-            end
-        end
-    end
-    
-    -- Cria novo cache contendo apenas o buffer atual (se válido)
-    local new_cache = {}
-    if current_buf_name ~= "" and is_valid_buffer(current_buf) then
-        new_cache[current_path] = {
-            {
-                name = vim.fn.fnamemodify(current_buf_name, ":t"),
-                path = current_buf_name
-            }
-        }
-    end
-    
-    -- Salva o novo cache
-    M.save_cache(new_cache)
-    
-    vim.notify("Cache limpo! Apenas o buffer atual foi mantido.", vim.log.levels.INFO)
-end
+	local current_buf = vim.api.nvim_get_current_buf()
+	local current_path = M.get_current_path()
+	local current_buf_name = vim.api.nvim_buf_get_name(current_buf)
 
+	-- Carrega o cache atual
+	local cache = M.load_cache()
+
+	-- Fecha e remove todos os buffers exceto o atual
+	for path, buffers in pairs(cache) do
+		-- Não limpa o path atual se estiver no mesmo diretório
+		if path ~= current_path then
+			for _, item in ipairs(buffers) do
+				local buf = find_buffer_by_path(item.path)
+				if buf and buf ~= current_buf then
+					vim.api.nvim_buf_delete(buf, { force = true })
+				end
+			end
+		end
+	end
+
+	-- Cria novo cache contendo apenas o buffer atual (se válido)
+	local new_cache = {}
+	if current_buf_name ~= "" and is_valid_buffer(current_buf) then
+		new_cache[current_path] = {
+			{
+				name = vim.fn.fnamemodify(current_buf_name, ":t"),
+				path = current_buf_name,
+			},
+		}
+	end
+
+	-- Salva o novo cache
+	M.save_cache(new_cache)
+
+	vim.notify("Cache limpo! Apenas o buffer atual foi mantido.", vim.log.levels.INFO)
+end
 
 -- Lista buffers do cache do path atual
 function M.list_buffers()
@@ -210,12 +215,28 @@ function M.list_buffers()
 			return string.format("[%d] %s   %s", item.index, item.name, item.path)
 		end,
 	}, function(choice)
+		-- if choice then
+		-- 	local buf = find_buffer_by_path(choice.path)
+		-- 	if buf then
+		-- 		-- Buffer já existe: apenas muda para ele
+		-- 		vim.cmd("buffer " .. buf)
+		-- 	else
+		-- 		-- Buffer não existe: cria e garante que seja listado
+		-- 		vim.cmd("silent! badd " .. choice.path)     -- Adiciona à lista de buffers
+		-- 		vim.cmd("buffer " .. vim.fn.bufnr(choice.path)) -- Muda para o buffer
+		-- 	end
+		-- end
+
+		-- Dentro da função M.list_buffers(), modifique o trecho onde o buffer é aberto:
 		if choice then
-			local buf = find_buffer_by_path(choice.path)
-			if buf then
-				vim.cmd("buffer " .. buf)   -- Usa buffer existente
+			if is_reusable_unnamed_buffer() then
+				-- Reutiliza o buffer '[No Name]'
+				vim.api.nvim_buf_set_name(0, choice.path)
+				vim.cmd("edit " .. choice.path)
 			else
-				vim.cmd("edit " .. choice.path) -- Abre novo se não existir
+				-- Abre normalmente
+				vim.cmd("silent! badd " .. choice.path)
+				vim.cmd("buffer " .. vim.fn.bufnr(choice.path))
 			end
 		end
 	end)
@@ -269,7 +290,6 @@ function M.setup_keymaps()
 	vim.keymap.set("n", "<leader>r", M.remove_last_buffer_from_cache, { desc = "Remover último buffer do cache" })
 
 	vim.keymap.set("n", "<leader>cc", M.clear_cache, { desc = "Limpar todo o cache de buffers" })
-
 end
 
 for i = 1, 9 do
@@ -279,26 +299,84 @@ for i = 1, 9 do
 		local buffers = cache[current_path] or {}
 
 		if buffers[i] then
-			-- Verifica se já está no buffer
-			local current_buf = vim.api.nvim_get_current_buf()
-			local target_buf = vim.fn.bufadd(buffers[i].path)
+			local buf_path = buffers[i].path
 
-			if vim.fn.bufexists(target_buf) == 1 and current_buf == target_buf then
-				vim.notify("Already in buffer " .. i .. ": " .. buffers[i].name, vim.log.levels.INFO)
-				return
-			end
-
-			local buf = find_buffer_by_path(buffers[i].path)
-			if buf then
-				vim.cmd("buffer " .. buf)       -- Usa buffer existente
+			-- Se o buffer atual for um '[No Name]' reutilizável, substitua-o
+			if is_reusable_unnamed_buffer() then
+				-- Define o nome do buffer atual para o novo arquivo
+				vim.api.nvim_buf_set_name(0, buf_path)
+				-- Recarrega o buffer com o novo arquivo
+				vim.cmd("edit " .. buf_path)
 			else
-				vim.cmd("edit " .. buffers[i].path) -- Abre novo se não existir
+				-- Caso contrário, abra normalmente
+				vim.cmd("silent! badd " .. buf_path)
+				vim.cmd("buffer " .. vim.fn.bufnr(buf_path))
 			end
+
+			-- Atualiza o cache (se necessário)
+			M.add_buffer_to_cache()
 		else
 			vim.notify("Não há buffer na posição " .. i, vim.log.levels.WARN)
 		end
 	end, { desc = "Abrir buffer " .. i .. " do cache" })
 end
+
+-- for i = 1, 9 do
+--     vim.keymap.set("n", "<A-" .. i .. ">", function()
+--         local current_path = M.get_current_path()
+--         local cache = M.load_cache()
+--         local buffers = cache[current_path] or {}
+--
+--         if buffers[i] then
+--             local buf_path = buffers[i].path
+--
+--             -- 1. Garante que o buffer seja adicionado à lista do Neovim
+--             vim.cmd("silent! badd " .. buf_path)
+--
+--             -- 2. Obtém o número do buffer (cria se não existir)
+--             local buf_num = vim.fn.bufnr(buf_path)
+--
+--             -- 3. Define o nome do buffer explicitamente (crucial para ':ls')
+--             vim.api.nvim_buf_set_name(buf_num, buf_path)
+--
+--             -- 4. Força a abertura do buffer como um arquivo real
+--             vim.cmd("buffer " .. buf_num)
+--
+--             -- 5. Atualiza o status do buffer
+--             vim.cmd("checktime")
+--         else
+--             vim.notify("Não há buffer na posição " .. i, vim.log.levels.WARN)
+--         end
+--     end, { desc = "Abrir buffer " .. i .. " do cache" })
+-- end
+
+-- for i = 1, 9 do
+-- 	vim.keymap.set("n", "<A-" .. i .. ">", function()
+-- 		local current_path = M.get_current_path()
+-- 		local cache = M.load_cache()
+-- 		local buffers = cache[current_path] or {}
+--
+-- 		if buffers[i] then
+-- 			-- Verifica se já está no buffer
+-- 			local current_buf = vim.api.nvim_get_current_buf()
+-- 			local target_buf = vim.fn.bufadd(buffers[i].path)
+--
+-- 			if vim.fn.bufexists(target_buf) == 1 and current_buf == target_buf then
+-- 				vim.notify("Already in buffer " .. i .. ": " .. buffers[i].name, vim.log.levels.INFO)
+-- 				return
+-- 			end
+--
+-- 			local buf = find_buffer_by_path(buffers[i].path)
+-- 			if buf then
+-- 				vim.cmd("buffer " .. buf)       -- Usa buffer existente
+-- 			else
+-- 				vim.cmd("edit " .. buffers[i].path) -- Abre novo se não existir
+-- 			end
+-- 		else
+-- 			vim.notify("Não há buffer na posição " .. i, vim.log.levels.WARN)
+-- 		end
+-- 	end, { desc = "Abrir buffer " .. i .. " do cache" })
+-- end
 
 -- Autocomandos para gerenciamento automático
 function M.setup_autocmds()
@@ -314,7 +392,6 @@ function M.setup_autocmds()
 				-- Lista de padrões de plugins para ignorar
 				local ignore_patterns = {
 					"neo%-tree",
-					"telescope",
 					"NvimTree",
 					"packer",
 					"fugitive",
@@ -362,4 +439,3 @@ M.setup_keymaps()
 M.setup_autocmds()
 
 return M
-

@@ -23,6 +23,81 @@ return {
 			telescope.load_extension("file_browser")
 			telescope.load_extension("ui-select")
 
+			local function telescope_mega_finder()
+				local pickers = require("telescope.builtin")
+				local actions = require("telescope.actions")
+				local action_state = require("telescope.actions.state")
+				local opts = {} -- opções comuns (opcional)
+
+				-- Menu de opções
+				local choices = {
+					{
+						"  Buscar Comandos (:comandos)",
+						function()
+							pickers.commands(opts)
+						end,
+					},
+					{
+						"󰞋  Ajuda (:help)",
+						function()
+							pickers.help_tags(opts)
+						end,
+					},
+					{
+						"  API do Neovim",
+						function()
+							pickers.builtin({ include_extensions = true })
+						end,
+					},
+					{
+						"  Arquivos Recentes",
+						function()
+							pickers.oldfiles(opts)
+						end,
+					},
+					{
+						"  Buscar Palavra no Projeto",
+						function()
+							pickers.live_grep(opts)
+						end,
+					},
+					{ "󰈆  Sair", nil },
+				}
+
+				-- Abre o menu no Telescope
+				require("telescope.pickers")
+						.new(opts, {
+							prompt_title = " Modo de Busca",
+							finder = require("telescope.finders").new_table({
+								results = choices,
+								entry_maker = function(entry)
+									return {
+										value = entry,
+										display = entry[1],
+										ordinal = entry[1],
+									}
+								end,
+							}),
+							sorter = require("telescope.config").values.generic_sorter(opts),
+							attach_mappings = function(prompt_bufnr, map)
+								-- Ao pressionar <Enter>, executa a função correspondente
+								actions.select_default:replace(function()
+									local selection = action_state.get_selected_entry()
+									if selection.value[2] then
+										actions.close(prompt_bufnr)
+										selection.value[2]() -- Executa a função
+									else
+										actions.close(prompt_bufnr) -- Sai se for "󰈆 Sair"
+									end
+								end)
+								return true
+							end,
+						})
+						:find()
+			end
+
+			vim.keymap.set("n", "<leader>ff", telescope_mega_finder, { desc = "[F]ind [F]iles/Commands/Help" })
+
 			-- Mapeamentos
 			vim.keymap.set("n", "<leader>pp", function()
 				builtin.find_files({ cwd = vim.fn.expand("%:p:h") })

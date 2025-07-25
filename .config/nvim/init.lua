@@ -7,11 +7,10 @@ buffer_manager.setup()
 buffer_manager.setup_keymaps()
 buffer_manager.setup_autocmds()
 
--- vim.lsp.enable('pyright')
 
 -- Basic settings
 vim.o.relativenumber = true
-vim.o.number = true -- Isso DESATIVA completamente os números de linha
+vim.o.number = true
 vim.g.have_nerd_font = true
 vim.opt.clipboard = "unnamedplus"
 -- vim.o.mouse = 'a'
@@ -132,7 +131,7 @@ vim.opt.fillchars:append({
 
 -- #############################
 -- ##                         ##
--- ## About NeoVim keymaps !  ##
+-- ## About NeoVim keymaps!   ##
 -- ##                         ##
 -- #############################
 
