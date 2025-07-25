@@ -33,28 +33,3 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = true },
 })
-
-
-vim.cmd([[
-  " highlight ColorColumn guibg=#3b4261
-  " highlight CursorLine guibg=#3b4261
-  " highlight! link CursorLineNr Normal
-  highlight! link WinSeparator VertSplit
-  highlight DiagnosticVirtualTextError guibg=none
-  highlight DiagnosticVirtualTextWarn guibg=none
-
-
-  highlight WinSeparator guifg=#7aa2f7 guibg=NONE gui=bold
-  " Para versão noturna do tokyonight:
-  highlight WinSeparator guifg=#3b4261 guibg=NONE
-
-  " StatusLine principal (janela ativa)
-
-  highlight StatusLine guibg=#afb3db guifg=#1d3975 gui=bold
-  " StatusLine não ativo
-  highlight StatusLineNC guibg=#16161e guifg=#3b4261
-  " Separador
-  highlight StatusLineSeparator guifg=#7aa2f7
-
-]])
-

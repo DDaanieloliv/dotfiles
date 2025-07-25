@@ -1,4 +1,12 @@
 require("config.lazy")
+
+local buffer_manager = require("config.buffer-manager")
+
+-- Inicializa o módulo
+buffer_manager.setup()
+buffer_manager.setup_keymaps()
+buffer_manager.setup_autocmds()
+
 -- vim.lsp.enable('pyright')
 
 -- Basic settings
@@ -13,8 +21,8 @@ vim.opt.sidescrolloff = 8
 vim.opt.swapfile = false
 
 -- Identation
-vim.opt.tabstop = 2 -- Número de espaços que um <Tab> representa
-vim.opt.shiftwidth = 2 -- Número de espaços para indentação automática
+vim.opt.tabstop = 2       -- Número de espaços que um <Tab> representa
+vim.opt.shiftwidth = 2    -- Número de espaços para indentação automática
 vim.opt.softtabstop = 2
 vim.opt.expandtab = false -- Converte tabs em espaços
 -- vim.opt.smartident = true
@@ -30,97 +38,6 @@ vim.cmd("set ignorecase smartcase")
 -- neotree
 vim.keymap.set("n", "<leader>nn", ":Neotree toggle<CR>", { desc = "Abrir Neo-tree" })
 -- 'H' Toggle to hidden files.
-
--- Have fun with buffers.
--- vim.keymap.set("n", "<leader>ls", function()
---     local buffers = {}
---     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
---         if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_name(buf) ~= "" then
---             table.insert(buffers, {
---                 buf = buf, -- Número real do buffer (não será exibido)
---                 name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t"),
---             })
---         end
---     end
---
---     vim.ui.select(buffers, {
---         prompt = "Selecione um buffer:",
---         format_item = function(item)
---             -- Adiciona um número sequencial baseado na posição na lista
---             local index = 0
---             for i, b in ipairs(buffers) do
---                 if b.buf == item.buf then
---                     index = i
---                     break
---                 end
---             end
---             return string.format("[%d] %s", index, item.name) -- Número fictício (1, 2, 3...)
---         end,
---     }, function(choice)
---         if choice then
---             vim.cmd("buffer " .. choice.buf)
---         end
---     end)
--- end, { desc = "Listar buffers (nativo)" })
-
--- vim.keymap.set("n", "<leader>ls", function()
--- 	local buffers = {}
--- 	local ignored_patterns = {
--- 		"neo%-tree", -- Padrão para buffers do NeoTree (com escaping para o hífen)
--- 		"Telescope",
--- 		"term://",
--- 		"^no name",
--- 	}
---
--- 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
--- 		local buf_name = vim.api.nvim_buf_get_name(buf)
--- 		local buf_filetype = vim.api.nvim_buf_get_option(buf, "filetype")
---
--- 		-- Verifica se o buffer deve ser ignorado
--- 		local is_ignored = false
--- 		for _, pattern in ipairs(ignored_patterns) do
--- 			if buf_name:match(pattern) or buf_filetype:match(pattern) then
--- 				is_ignored = true
--- 				break
--- 			end
--- 		end
---
--- 		-- Filtro adicional para NeoTree (caso o padrão não capture todos os casos)
--- 		if not is_ignored then
--- 			if buf_filetype == "neo-tree" or buf_name:match("neo%-tree") then
--- 				is_ignored = true
--- 			end
--- 		end
---
--- 		-- Adiciona apenas buffers válidos e não ignorados
--- 		if not is_ignored and vim.api.nvim_buf_is_loaded(buf) and buf_name ~= "" then
--- 			table.insert(buffers, {
--- 				buf = buf,
--- 				name = vim.fn.fnamemodify(buf_name, ":t"), -- Nome do arquivo sem o caminho
--- 			})
--- 		end
--- 	end
---
--- 	-- Exibe a lista de buffers com numeração sequencial
--- 	vim.ui.select(buffers, {
--- 		prompt = "Selecione um buffer:",
--- 		format_item = function(item)
--- 			local index = 0
--- 			for i, b in ipairs(buffers) do
--- 				if b.buf == item.buf then
--- 					index = i
--- 					break
--- 				end
--- 			end
--- 			return string.format("[%d] %s", index, item.name)
--- 		end,
--- 	}, function(choice)
--- 		if choice then
--- 			vim.cmd("buffer " .. choice.buf)
--- 		end
--- 	end)
--- end, { desc = "Listar buffers (filtro robusto para NeoTree)" })
-
 
 -- Split behavior
 vim.opt.wrap = false -- Não quebra linhas
@@ -141,8 +58,8 @@ vim.opt.splitbelow = true -- Horizontal splits go below
 vim.opt.splitright = true -- Vertical splits go right
 
 -- Window appearance
-vim.opt.winblend = 10 -- Transparência em janelas flutuantes
-vim.opt.pumblend = 10 -- Transparência no menu de autocompletar
+vim.opt.winblend = 10        -- Transparência em janelas flutuantes
+vim.opt.pumblend = 10        -- Transparência no menu de autocompletar
 vim.opt.termguicolors = true -- Habilita cores verdadeiras (24-bit)
 
 vim.opt.fillchars:append({
@@ -156,10 +73,10 @@ vim.opt.fillchars:append({
 })
 
 -- Visual cues
-vim.opt.showmode = true -- Oculta o -- INSERT -- (já que temos statusline)
+vim.opt.showmode = true   -- Oculta o -- INSERT -- (já que temos statusline)
 vim.opt.cursorline = true -- Destaque para linha atual
 -- vim.opt.colorcolumn = "100"          -- Linha guia para limite de coluna
-vim.opt.list = true -- Mostra caracteres especiais
+vim.opt.list = true       -- Mostra caracteres especiais
 vim.opt.listchars = {
 	tab = "→ ",
 	trail = "·",
@@ -170,9 +87,9 @@ vim.opt.listchars = {
 
 -- vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
--- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 -- vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "CursorLineNr", {
 	fg = "#ff9e64",
 	bg = "none",
@@ -181,24 +98,18 @@ vim.api.nvim_set_hl(0, "CursorLineNr", {
 -- Define a cor do highlight quando um texto é yanked (copiado)
 vim.api.nvim_set_hl(0, "IncSearch", {
 	bg = "#c98f5d",
-	fg = "black", -- Cor do texto (opcional)
-	bold = true, -- Negrito (opcional)
+	fg = "black",    -- Cor do texto (opcional)
+	bold = true,     -- Negrito (opcional)
 	underline = true, -- Sublinhado (opcional)
 })
 
 -- Ajustes específicos para tokyonight
 vim.cmd([[
-  " highlight ColorColumn guibg=#3b4261
   highlight CursorLine guibg=#353842
-  " highlight! link CursorLineNr Normal
   highlight! link WinSeparator VertSplit
   highlight DiagnosticVirtualTextError guibg=none
   highlight DiagnosticVirtualTextWarn guibg=none
-
-  highlight WinSeparator guifg=#7aa2f7 guibg=NONE gui=bold
-  " Para versão noturna do tokyonight:
-  highlight WinSeparator guifg=#3b4261 guibg=NONE
-
+	highlight WinSeparator guifg=#3b4261 guibg=NONE
   " StatusLine principal (janela ativa)
   highlight StatusLine guibg=#afb3db guifg=#1d3975 gui=bold
   " StatusLine não ativo
@@ -423,268 +334,4 @@ end, { noremap = true, silent = true, desc = "Close floating terminal from termi
 
 
 
-
-
-
-local M = {}
-
--- Configurações
-local cache_dir = vim.fn.stdpath('data') .. '/buffer_cache'
-local cache_file = cache_dir .. '/buffers.lua'
-
--- Função para verificar se um buffer é válido
-local function is_valid_buffer(buf)
-    local buf_name = vim.api.nvim_buf_get_name(buf)
-    local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
-    local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
-    
-    return buf_name ~= "" 
-        and buftype == "" 
-        and filetype ~= ""
-        and vim.fn.filereadable(buf_name) == 1
-end
-
--- Inicializa o sistema de cache
-function M.setup()
-    if vim.fn.isdirectory(cache_dir) == 0 then
-        vim.fn.mkdir(cache_dir, 'p')
-    end
-
-    if vim.fn.filereadable(cache_file) == 0 then
-        M.save_cache({})
-    end
-end
-
--- Carrega o cache do arquivo
-function M.load_cache()
-    local ok, cache = pcall(dofile, cache_file)
-    if ok and cache then
-        return cache
-    end
-    return {}
-end
-
--- Salva o cache no arquivo
-function M.save_cache(cache)
-    local file = io.open(cache_file, 'w')
-    if file then
-        file:write('return ' .. vim.inspect(cache))
-        file:close()
-    end
-end
-
--- Obtém o path atual formatado
-function M.get_current_path()
-    return vim.fn.getcwd()
-end
-
--- Adiciona um buffer ao cache do path atual
-function M.add_buffer_to_cache()
-    local current_path = M.get_current_path()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    
-    if not is_valid_buffer(0) then return end
-    
-    local cache = M.load_cache()
-    cache[current_path] = cache[current_path] or {}
-    
-    local exists = false
-    for _, item in ipairs(cache[current_path]) do
-        if item.path == buf_name then
-            exists = true
-            break
-        end
-    end
-    
-    if not exists then
-        table.insert(cache[current_path], {
-            name = vim.fn.fnamemodify(buf_name, ':t'),
-            path = buf_name,
-        })
-        M.save_cache(cache)
-    end
-end
-
--- Remove o buffer atual do cache
-function M.remove_current_buffer_from_cache()
-    local current_path = M.get_current_path()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    local cache = M.load_cache()
-    
-    if not cache[current_path] then return end
-    
-    for i, item in ipairs(cache[current_path]) do
-        if item.path == buf_name then
-            if #cache[current_path] == 1 then
-                vim.notify("Não é possível remover o último buffer do path atual!", vim.log.levels.WARN)
-                return
-            end
-            
-            table.remove(cache[current_path], i)
-            M.save_cache(cache)
-            break
-        end
-    end
-end
-
--- Remove o último buffer adicionado do path atual
-function M.remove_last_buffer_from_cache()
-    local current_path = M.get_current_path()
-    local cache = M.load_cache()
-    
-    if not cache[current_path] or #cache[current_path] == 0 then
-        vim.notify("Nenhum buffer para remover neste path!", vim.log.levels.WARN)
-        return
-    end
-    
-    local last_buffer = cache[current_path][#cache[current_path]].path
-    local current_buffer = vim.api.nvim_buf_get_name(0)
-    
-    if last_buffer == current_buffer then
-        vim.notify("Não é possível remover o buffer atual se for o último!", vim.log.levels.WARN)
-        return
-    end
-    
-    table.remove(cache[current_path])
-    M.save_cache(cache)
-end
-
--- Limpa todo o cache
-function M.clear_cache()
-    M.save_cache({})
-    vim.notify("Cache de buffers limpo com sucesso!", vim.log.levels.INFO)
-end
-
--- Lista buffers do cache do path atual
-function M.list_buffers()
-    local current_path = M.get_current_path()
-    local cache = M.load_cache()
-    local buffers = cache[current_path] or {}
-    
-    -- Filtra buffers que ainda existem
-    local valid_buffers = {}
-    for i, item in ipairs(buffers) do
-        table.insert(valid_buffers, {
-            index = i,
-            name = item.name,
-            path = item.path,
-            is_open = vim.fn.bufexists(vim.fn.bufadd(item.path)) == 1
-        })
-    end
-    
-    -- Exibe lista numerada
-    vim.ui.select(valid_buffers, {
-        prompt = "Buffers:",
-        format_item = function(item)
-            local status = item.is_open and "✓" or " "
-            return string.format("[%d] %s %s (%s)", item.index, status, item.name, item.path)
-        end,
-    }, function(choice)
-        if choice then 
-            if vim.fn.bufexists(vim.fn.bufadd(choice.path)) == 1 then
-                vim.cmd("buffer " .. vim.fn.bufadd(choice.path))
-            else
-                vim.cmd("edit " .. choice.path)
-            end
-        end
-    end)
-end
-
--- Configura os keymaps
-function M.setup_keymaps()
-    vim.keymap.set('n', '<leader>ls', M.list_buffers, { desc = 'Listar buffers (com cache)' })
-    
-    vim.keymap.set('n', '<leader>q', function()
-        M.remove_current_buffer_from_cache()
-        vim.cmd('bd')
-    end, { desc = 'Remover buffer do cache e fechar' })
-    
-    vim.keymap.set('n', '<leader>r', M.remove_last_buffer_from_cache, { desc = 'Remover último buffer do cache' })
-    
-    vim.keymap.set('n', '<leader>cc', M.clear_cache, { desc = 'Limpar todo o cache de buffers' })
-    
-    for i = 1, 9 do
-        vim.keymap.set('n', '<A-'..i..'>', function()
-            local current_path = M.get_current_path()
-            local cache = M.load_cache()
-            local buffers = cache[current_path] or {}
-            
-            if buffers[i] then
-                if vim.fn.filereadable(buffers[i].path) == 1 then
-                    if vim.fn.bufexists(vim.fn.bufadd(buffers[i].path)) == 1 then
-                        vim.cmd("buffer " .. vim.fn.bufadd(buffers[i].path))
-                    else
-                        vim.cmd("edit " .. buffers[i].path)
-                    end
-                else
-                    vim.notify('Arquivo não existe mais: '..buffers[i].path, vim.log.levels.WARN)
-                end
-            else
-                vim.notify('Não há buffer na posição '..i, vim.log.levels.WARN)
-            end
-        end, { desc = 'Abrir buffer '..i..' do cache' })
-    end
-end
-
--- Autocomandos para gerenciamento automático
-function M.setup_autocmds()
-    -- Registrar buffer quando for aberto
-    vim.api.nvim_create_autocmd('BufEnter', {
-        callback = function(args)
-            local buf = args.buf
-            if is_valid_buffer(buf) then
-                -- Verifica se foi um buffer aberto manualmente (não por plugin)
-                local buf_name = vim.api.nvim_buf_get_name(buf)
-                local is_plugin_buffer = false
-                
-                -- Lista de padrões de plugins para ignorar
-                local ignore_patterns = {
-                    "neo%-tree",
-                    "telescope",
-                    "NvimTree",
-                    "packer",
-                    "fugitive",
-                    "term://",
-                    "^no name",
-                }
-                
-                for _, pattern in ipairs(ignore_patterns) do
-                    if buf_name:match(pattern) then
-                        is_plugin_buffer = true
-                        break
-                    end
-                end
-                
-                if not is_plugin_buffer then
-                    M.add_buffer_to_cache()
-                end
-            end
-        end,
-    })
-    -- Atualizar cache quando mudar de diretório
-    vim.api.nvim_create_autocmd('DirChanged', {
-        callback = function()
-            -- Limpa buffers inválidos ao mudar de diretório
-            local cache = M.load_cache()
-            local current_path = M.get_current_path()
-            if cache[current_path] then
-                local new_list = {}
-                for _, item in ipairs(cache[current_path]) do
-                    if vim.fn.filereadable(item.path) == 1 then
-                        table.insert(new_list, item)
-                    end
-                end
-                cache[current_path] = new_list
-                M.save_cache(cache)
-            end
-        end,
-    })
-end
-
--- Inicializa o módulo
-M.setup()
-M.setup_keymaps()
-M.setup_autocmds()
-
-return M
 
