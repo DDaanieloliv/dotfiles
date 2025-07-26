@@ -21,6 +21,15 @@ return {
 	-- 	end,
 	-- },
 
+	-- Example with lazy.nvim
+	{
+		"echasnovski/mini.nvim",
+		version = "*", -- use '*' for latest release, or a specific tag like 'v1.2.3'
+		config = function()
+			require("mini.statusline").setup()
+		end,
+	},
+
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
