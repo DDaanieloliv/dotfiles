@@ -7,7 +7,6 @@ buffer_manager.setup()
 buffer_manager.setup_keymaps()
 buffer_manager.setup_autocmds()
 
-
 -- Basic settings
 vim.o.relativenumber = true
 vim.o.number = true
@@ -99,7 +98,8 @@ vim.api.nvim_set_hl(0, "IncSearch", {
 
 -- Ajustes específicos para tokyonight
 vim.cmd([[
-  highlight CursorLine guibg=#353842
+  " highlight CursorLine guibg=#353842
+	highlight CursorLine guibg=none
   highlight! link WinSeparator VertSplit
   highlight DiagnosticVirtualTextError guibg=none
   highlight DiagnosticVirtualTextWarn guibg=none
@@ -143,11 +143,12 @@ vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
+
 -- Adiciona TAB nas linhas selecionadas (modo visual)
-vim.keymap.set("v", "<S-t>", ">gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<leader>a", ">gv", { noremap = true, silent = true })
 
 -- Remove TAB das linhas selecionadas (modo visual)
-vim.keymap.set("v", "<S-x", "<gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<leader>x", "<gv", { noremap = true, silent = true })
 
 -- Splitting & Resizing
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
@@ -169,7 +170,7 @@ end, { desc = "Listar diagnósticos" })
 -- Depois na janela quickfix, pressione 'yy' para copiar a mensagem selecionada
 
 -- Adding 'space' character to the current line
-vim.keymap.set("n", "<S-a>", function()
+vim.keymap.set("n", "<S-q>", function()
 	local pos = vim.api.nvim_win_get_cursor(0)
 	local line = vim.api.nvim_get_current_line()
 	if pos[2] >= #line then
@@ -220,6 +221,88 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- ## FloatingTerminal configuration ! ##
 -- ##                                  ##
 -- ######################################
+
+-- Configurações básicas para terminais
+vim.api.nvim_create_autocmd('TermOpen', {
+  group = vim.api.nvim_create_augroup('custom-term-settings', { clear = true }),
+  callback = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, noremap = true })
+  end
+})
+
+-- Funções úteis
+local function set_terminal_size(direction, amount)
+  local win = vim.api.nvim_get_current_win()
+  local current_height = vim.api.nvim_win_get_height(win)
+  local current_width = vim.api.nvim_win_get_width(win)
+  
+  if direction == 'height' then
+    vim.api.nvim_win_set_height(win, math.max(5, current_height + amount))
+  elseif direction == 'width' then
+    vim.api.nvim_win_set_width(win, math.max(20, current_width + amount))
+  end
+end
+
+-- Mapeamentos principais
+local term_mappings = {
+  -- Seu terminal original (st)
+  ['<leader>st'] = {
+    function()
+      vim.cmd.vnew()
+      vim.cmd.term()
+      vim.cmd.wincmd('J')
+      vim.api.nvim_win_set_height(0, 5)
+    end,
+    desc = "Abrir terminal inferior pequeno"
+  },
+  
+  -- Terminal horizontal (inferior)
+  ['<leader>th'] = {
+    function()
+      vim.cmd.split()
+      vim.cmd.term()
+      vim.api.nvim_win_set_height(0, 15)
+    end,
+    desc = "Abrir terminal horizontal"
+  },
+  
+  -- Terminal vertical (lado direito)
+  ['<leader>tv'] = {
+    function()
+      vim.cmd.vsplit()
+      vim.cmd.term()
+      vim.api.nvim_win_set_width(0, 50)
+    end,
+    desc = "Abrir terminal vertical"
+  },
+  
+  -- Controles de tamanho (funcionam em qualquer terminal)
+  ['<leader>='] = {
+    function() set_terminal_size('height', 3) end,
+    desc = "Aumentar altura do terminal"
+  },
+  ['<leader>-'] = {
+    function() set_terminal_size('height', -3) end,
+    desc = "Diminuir altura do terminal"
+  },
+  ['<leader>.'] = {
+    function() set_terminal_size('width', 5) end,
+    desc = "Aumentar largura do terminal"
+  },
+  ['<leader>,'] = {
+    function() set_terminal_size('width', -5) end,
+    desc = "Diminuir largura do terminal"
+  },
+}
+
+-- Aplicar todos os mapeamentos
+for key, mapping in pairs(term_mappings) do
+  vim.keymap.set('n', key, mapping[1], { noremap = true, silent = true, desc = mapping.desc })
+end
+
+
 
 local terminal_state = {
 	buf = nil,
@@ -325,7 +408,3 @@ vim.keymap.set("t", "<Esc>", function()
 		terminal_state.is_open = false
 	end
 end, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
-
-
-
-
