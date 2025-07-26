@@ -129,10 +129,10 @@
 
       if [[ $EUID -eq 0 ]]; then
         # Prompt especial para root (com formatação igual ao usuário comum)
-        export PS1="\n\n\[$(tput bold)\]\[\033[38;2;220;124;126m\]root\[$(tput sgr0)\] in \[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
+        export PS1="\n\[$(tput bold)\]\[\033[38;2;220;124;126m\]root\[$(tput sgr0)\] in \[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
       else
         # Prompt padrão para usuário normal
-        export PS1="\n\n\[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\$(get_git_info)\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
+        export PS1="\n\[$(tput bold)\]\[\033[38;2;72;205;232m\]\$(_format_dir)\[$(tput sgr0)\]\$(get_git_info)\n\[$(tput bold)\]\[\033[38;2;66;173;103m\]❱\[$(tput sgr0)\] "
       fi
 
 
@@ -146,7 +146,7 @@
     baseIndex = 1; # Começa janelas em 1
     clock24 = true; # Relógio em 24h
     escapeTime = 10; # Tempo de escape (ms)
-    historyLimit = 5000;
+    historyLimit = 8000;
     mouse = true; # Ativa mouse
 
     # ===== Prefix Key =====
@@ -174,6 +174,13 @@
 
       bind -n C-r source-file ~/.config/tmux/tmux.conf 
 
+
+      # Binds alternativos
+      bind -n M-Left resize-pane -L 1   # Alt+Left
+      bind -n M-Right resize-pane -R 1  # Alt+Right
+      bind -n M-Down resize-pane -D 1   # Alt+Down
+      bind -n M-Up resize-pane -U 1     # Alt+Up
+
       bind -n C-h select-pane -L
       bind -n C-j select-pane -D
       bind -n C-k select-pane -U
@@ -182,18 +189,14 @@
       bind-key -n C-p previous-window
       bind-key -n C-n next-window
 
-      bind -n C-S-Left resize-pane -L 1   # Move 3 colunas para esquerda
-      bind -n C-S-Right resize-pane -R 1  # Move 3 colunas para direita
-      bind -n C-S-Down resize-pane -D 1   # Move 1 linha para baixo  
-      bind -n C-S-Up resize-pane -U 1     # Move 1 linha para cima    
 
       # Suporte ao clipboard
-      set -g set-clipboard on
+      set-option -g set-clipboard on
 
       set -g window-status-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
-      set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=#edb9b9, fg=black] #I#[bg=default,fg=#edb9b9]\uE0B4 "       # Oculta janelas inativas
+      set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=#e3a1a1, fg=black] #I#[bg=default,fg=#e3a1a1]\uE0B4 "       # Oculta janelas inativas
 
-
+      #edb9b9
 
       set -g status-left "#[bg=default, fg=green]\uE0B6#[bg=green,fg=black] #[fg=white,bg=#342838] #S#[bg=default,fg=#342838]\uE0B4  "
 
@@ -380,6 +383,7 @@
 
       window_padding_width 10
 
+      tab_bar_style hidden
     '';
 
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
@@ -418,4 +422,3 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
-
