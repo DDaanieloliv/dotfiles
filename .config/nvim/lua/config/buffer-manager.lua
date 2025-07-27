@@ -1,5 +1,10 @@
 local M = {}
 
+-- Função auxiliar para substituir nvim_buf_get_option
+local function get_buf_option(bufnr, option)
+	return vim.api.nvim_get_option_value(option, { buf = bufnr })
+end
+
 -- Função para encontrar buffer pelo caminho
 local function find_buffer_by_path(path)
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -11,24 +16,37 @@ local function find_buffer_by_path(path)
 end
 
 -- Verifica se o buffer atual é um '[No Name]' que pode ser reutilizado
+-- local function is_reusable_unnamed_buffer()
+-- 	local buf_name = vim.api.nvim_buf_get_name(0)
+-- 	local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+-- 	return buf_name == "" and buftype == ""
+-- end
 local function is_reusable_unnamed_buffer()
 	local buf_name = vim.api.nvim_buf_get_name(0)
-	local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+	local buftype = get_buf_option(0, "buftype")
 	return buf_name == "" and buftype == ""
 end
+
 
 -- Configurações
 local cache_dir = vim.fn.stdpath("data") .. "/buffer_cache"
 local cache_file = cache_dir .. "/buffers.lua"
 
 -- Função para verificar se um buffer é válido
+-- local function is_valid_buffer(buf)
+-- 	local buf_name = vim.api.nvim_buf_get_name(buf)
+-- 	local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+-- 	local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+--
+-- 	return buf_name ~= "" and buftype == "" and filetype ~= "" and vim.fn.filereadable(buf_name) == 1
+-- end
 local function is_valid_buffer(buf)
 	local buf_name = vim.api.nvim_buf_get_name(buf)
-	local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
-	local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
-
+	local buftype = get_buf_option(buf, "buftype")
+	local filetype = get_buf_option(buf, "filetype")
 	return buf_name ~= "" and buftype == "" and filetype ~= "" and vim.fn.filereadable(buf_name) == 1
 end
+
 
 -- Inicializa o sistema de cache
 function M.setup()
@@ -177,11 +195,17 @@ function M.clear_cache()
 			local buf = find_buffer_by_path(item.path)
 			if buf and buf ~= current_buf then
 				-- Salva se tiver modificações
-				if vim.api.nvim_buf_get_option(buf, "modified") then
+				-- if vim.api.nvim_buf_get_option(buf, "modified") then
+				-- 	vim.api.nvim_buf_call(buf, function()
+				-- 		vim.cmd("w")
+				-- 	end)
+				-- end
+				if get_buf_option(buf, "modified") then
 					vim.api.nvim_buf_call(buf, function()
 						vim.cmd("w")
 					end)
 				end
+
 				vim.api.nvim_buf_delete(buf, { force = true })
 			end
 		end
@@ -305,8 +329,6 @@ function M.setup_keymaps()
 	vim.keymap.set("n", "<leader>cc", M.clear_cache, { desc = "Limpar todo o cache de buffers" })
 end
 
-
-
 for i = 1, 9 do
 	vim.keymap.set("n", "<A-" .. i .. ">", function()
 		local current_path = M.get_current_path()
@@ -321,7 +343,8 @@ for i = 1, 9 do
 				for _, win in ipairs(vim.api.nvim_list_wins()) do
 					local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
 					if ok and vim.api.nvim_buf_is_valid(buf) then
-						local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+						-- local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+						local ft = get_buf_option(buf, "filetype")
 						if ft == "TelescopePrompt" then
 							pcall(vim.api.nvim_win_close, win, true)
 						end
