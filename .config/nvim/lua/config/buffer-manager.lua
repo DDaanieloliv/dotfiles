@@ -154,54 +154,54 @@ end
 
 -- Limpa todo o cache exceto o buffer atual
 function M.clear_cache()
-    local current_buf = vim.api.nvim_get_current_buf()
-    local current_path = M.get_current_path()
-    local current_buf_name = vim.api.nvim_buf_get_name(current_buf)
-    local cache = M.load_cache()
+	local current_buf = vim.api.nvim_get_current_buf()
+	local current_path = M.get_current_path()
+	local current_buf_name = vim.api.nvim_buf_get_name(current_buf)
+	local cache = M.load_cache()
 
-    -- Fecha e remove todos os buffers de outros paths
-    for path, buffers in pairs(cache) do
-        if path ~= current_path then
-            for _, item in ipairs(buffers) do
-                local buf = find_buffer_by_path(item.path)
-                if buf and buf ~= current_buf then
-                    vim.api.nvim_buf_delete(buf, { force = true })
-                end
-            end
-        end
-    end
+	-- Fecha e remove todos os buffers de outros paths
+	for path, buffers in pairs(cache) do
+		if path ~= current_path then
+			for _, item in ipairs(buffers) do
+				local buf = find_buffer_by_path(item.path)
+				if buf and buf ~= current_buf then
+					vim.api.nvim_buf_delete(buf, { force = true })
+				end
+			end
+		end
+	end
 
-    -- Fecha e salva buffers do path atual (exceto o atual)
-    if cache[current_path] then
-        for _, item in ipairs(cache[current_path]) do
-            local buf = find_buffer_by_path(item.path)
-            if buf and buf ~= current_buf then
-                -- Salva se tiver modificações
-                if vim.api.nvim_buf_get_option(buf, "modified") then
-                    vim.api.nvim_buf_call(buf, function()
-                        vim.cmd("w")
-                    end)
-                end
-                vim.api.nvim_buf_delete(buf, { force = true })
-            end
-        end
-    end
+	-- Fecha e salva buffers do path atual (exceto o atual)
+	if cache[current_path] then
+		for _, item in ipairs(cache[current_path]) do
+			local buf = find_buffer_by_path(item.path)
+			if buf and buf ~= current_buf then
+				-- Salva se tiver modificações
+				if vim.api.nvim_buf_get_option(buf, "modified") then
+					vim.api.nvim_buf_call(buf, function()
+						vim.cmd("w")
+					end)
+				end
+				vim.api.nvim_buf_delete(buf, { force = true })
+			end
+		end
+	end
 
-    -- Cria novo cache contendo apenas o buffer atual (se válido)
-    local new_cache = {}
-    if current_buf_name ~= "" and is_valid_buffer(current_buf) then
-        new_cache[current_path] = {
-            {
-                name = vim.fn.fnamemodify(current_buf_name, ":t"),
-                path = current_buf_name,
-            },
-        }
-    end
+	-- Cria novo cache contendo apenas o buffer atual (se válido)
+	local new_cache = {}
+	if current_buf_name ~= "" and is_valid_buffer(current_buf) then
+		new_cache[current_path] = {
+			{
+				name = vim.fn.fnamemodify(current_buf_name, ":t"),
+				path = current_buf_name,
+			},
+		}
+	end
 
-    -- Salva o novo cache
-    M.save_cache(new_cache)
+	-- Salva o novo cache
+	M.save_cache(new_cache)
 
-    vim.notify("Cache limpo! Apenas o buffer atual foi mantido.", vim.log.levels.INFO)
+	vim.notify("Cache limpo! Apenas o buffer atual foi mantido.", vim.log.levels.INFO)
 end
 
 -- Lista buffers do cache do path atual
@@ -305,6 +305,8 @@ function M.setup_keymaps()
 	vim.keymap.set("n", "<leader>cc", M.clear_cache, { desc = "Limpar todo o cache de buffers" })
 end
 
+
+
 for i = 1, 9 do
 	vim.keymap.set("n", "<A-" .. i .. ">", function()
 		local current_path = M.get_current_path()
@@ -314,19 +316,36 @@ for i = 1, 9 do
 		if buffers[i] then
 			local buf_path = buffers[i].path
 
-			-- Se o buffer atual for um '[No Name]' reutilizável, substitua-o
+			-- Fecha o Telescope de forma segura
+			pcall(function()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					local ok, buf = pcall(vim.api.nvim_win_get_buf, win)
+					if ok and vim.api.nvim_buf_is_valid(buf) then
+						local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+						if ft == "TelescopePrompt" then
+							pcall(vim.api.nvim_win_close, win, true)
+						end
+					end
+				end
+			end)
+
 			if is_reusable_unnamed_buffer() then
-				-- Define o nome do buffer atual para o novo arquivo
 				vim.api.nvim_buf_set_name(0, buf_path)
-				-- Recarrega o buffer com o novo arquivo
-				vim.cmd("edit " .. buf_path)
+				vim.cmd("edit " .. vim.fn.fnameescape(buf_path))
 			else
-				-- Caso contrário, abra normalmente
-				vim.cmd("silent! badd " .. buf_path)
-				vim.cmd("buffer " .. vim.fn.bufnr(buf_path))
+				-- Verifica se o buffer já existe
+				local buf = find_buffer_by_path(buf_path)
+				if not buf then
+					vim.cmd("silent! badd " .. vim.fn.fnameescape(buf_path))
+					buf = vim.fn.bufnr(buf_path)
+				end
+
+				-- Alterna para o buffer de forma segura
+				if buf and vim.api.nvim_buf_is_valid(buf) then
+					vim.api.nvim_set_current_buf(buf)
+				end
 			end
 
-			-- Atualiza o cache (se necessário)
 			M.add_buffer_to_cache()
 		else
 			vim.notify("Não há buffer na posição " .. i, vim.log.levels.WARN)
