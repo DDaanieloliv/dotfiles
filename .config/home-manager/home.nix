@@ -179,14 +179,13 @@
       set -ga terminal-overrides ",gnome*:RGB"
 
       # Melhores binds para splits
-      unbind |
       bind -n C-\\ split-window -h -c "#{pane_current_path}"
       bind -n C-] split-window -v -c "#{pane_current_path}"
       bind -n C-t new-window -c "#{pane_current_path}"
       bind -n C-x kill-pane
 
-      bind -n C-r source-file ~/.config/tmux/tmux.conf 
-
+      # bind -n C-r source-file ~/.config/tmux/tmux.conf 
+			bind-key r source-file ~/.config/tmux/tmux.conf \; run-shell "tmux move-window -r"
 
       # Binds alternativos
       bind -n M-Left resize-pane -L 1   # Alt+Left
@@ -202,30 +201,51 @@
       bind-key -n C-p previous-window
       bind-key -n C-n next-window
 
+			# Mover janela para a esquerda (swap com a anterior)
+			bind-key - swap-window -t -1
+
+			# Mover janela para a direita (swap com a próxima)
+			bind-key + swap-window -t +1
 
       # Suporte ao clipboard
-      set-option -g set-clipboard on
+			set -g set-clipboard on  # Habilita o básico
 
-      set -g window-status-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
-      set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=#e3a1a1, fg=black] #I#[bg=default,fg=#e3a1a1]\uE0B4 "       # Oculta janelas inativas
 
-      #edb9b9
+			# Habilita keybindings no estilo Vim
+			set-window-option -g mode-keys vi
 
-      set -g status-left "#[bg=default, fg=green]\uE0B6#[bg=green,fg=black] #[fg=white,bg=#342838] #S#[bg=default,fg=#342838]\uE0B4  "
+			# Apenas o essencial para evitar concatenação (Linux exemplo):
+			bind -T copy-mode-vi MouseDragEnd1Pane \
+					send-keys -X copy-pipe "echo -n | xclip -selection clipboard -in; xclip -selection clipboard -in"
 
-      # Suporte ao clipboard
-      set -g set-clipboard on
+			bind-key -T copy-mode-vi y \
+					send-keys -X copy-pipe "echo -n | xclip -selection clipboard -in; xclip -selection clipboard -in"
 
-      #set-option -g status-justify centre
-      set-option -g status-position top
-      set-option -g status-left-length 100
-      set-option -g status-right-length 100
-      set-option -g status-right-style bg=default,fg=white
-      set-option -g status-left-style bg=default,fg=white
-      set -g status-style bg=default,fg=white
 
-      set -g status-right "#[bg=default,fg=#f77ee5]\uE0B6#[bg=#f77ee5,fg=black] #[fg=white,bg=#342838] #(short-path #{pane_current_path})#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue,fg=black]󰸘 #[bg=#342838,fg=white] %d#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue, fg=black]󰃰 #[bg=#342838, fg=white] %H:%M#[bg=default,fg=#342838]\uE0B4"
+			# Atalhos para entrar no modo de cópia (como o Vim)
+			bind-key -T copy-mode-vi v send-keys -X begin-selection  # Entra em modo visual
+			# bind-key -T copy-mode-vi y send-keys -X copy-selection  # Copia seleção (como 'y' no Vim)
+			bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle  # Modo bloco (visual block)
 
+			# Opcional: Tecla para sair do modo de cópia (Esc como no Vim)
+			bind-key -T copy-mode-vi Escape send-keys -X cancel
+
+
+			#set-option -g status-justify centre
+			set-option -g status-position top
+			set-option -g status-left-length 100
+			set-option -g status-right-length 100
+			set-option -g status-right-style bg=default,fg=white
+			set-option -g status-left-style bg=default,fg=white
+			set -g status-style bg=default,fg=white
+
+			set -g window-status-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white]#W #[bg=colour223, fg=black] #I#[bg=default,fg=colour223]\uE0B4 "       # Oculta janelas inativas
+			set -g window-status-current-format "#[bg=default,fg=#342838]\uE0B6#[bg=#342838,fg=white] #W #[bg=#e3a1a1, fg=black] #I#[bg=default,fg=#e3a1a1]\uE0B4 "       # Oculta janelas inativas
+
+			set -g status-left "#[bg=default, fg=green]\uE0B6#[bg=green,fg=black] #[fg=white,bg=#342838] #S#[bg=default,fg=#342838]\uE0B4  "
+
+
+			set -g status-right "#[bg=default,fg=#f77ee5]\uE0B6#[bg=#f77ee5,fg=black] #[fg=white,bg=#342838] #(short-path #{pane_current_path})#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue,fg=black]󰸘 #[bg=#342838,fg=white] %d#[bg=default,fg=#342838]\uE0B4  #[bg=default,fg=blue]\uE0B6#[bg=blue, fg=black]󰃰 #[bg=#342838, fg=white] %H:%M#[bg=default,fg=#342838]\uE0B4"
 
     '';
   };
@@ -286,6 +306,7 @@
     xclip
     lua-language-server
     lm_sensors
+		maven
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
       home="$HOME"
@@ -326,7 +347,6 @@
         fi
       fi
     '')
-    maven
 
     # Adds the 'hello' command to your environment. It prints a friendly
     # "Hello, world!" when run.
