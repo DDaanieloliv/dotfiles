@@ -18,13 +18,11 @@ end
 -- Verifica se o buffer atual é um '[No Name]' que pode ser reutilizado
 -- local function is_reusable_unnamed_buffer()
 -- 	local buf_name = vim.api.nvim_buf_get_name(0)
--- 	local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+-- 	local buftype = get_buf_option(0, "buftype")
 -- 	return buf_name == "" and buftype == ""
 -- end
 local function is_reusable_unnamed_buffer()
-	local buf_name = vim.api.nvim_buf_get_name(0)
-	local buftype = get_buf_option(0, "buftype")
-	return buf_name == "" and buftype == ""
+    return false
 end
 
 

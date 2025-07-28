@@ -12,7 +12,8 @@ vim.o.relativenumber = true
 vim.o.number = true
 vim.g.have_nerd_font = true
 vim.opt.clipboard = "unnamedplus"
--- vim.o.mouse = 'a'
+vim.o.mouse = 'a'
+
 
 vim.opt.scrolloff = 10
 vim.opt.sidescrolloff = 8
@@ -27,11 +28,11 @@ vim.opt.expandtab = false -- Converte tabs em espaços
 -- vim.opt.autoident = true
 
 -- Search settings
--- vim.cmd("set ignorecase smartcase")
+vim.cmd("set ignorecase smartcase")
 vim.opt.ignorecase = true
+vim.opt.incsearch = true
 -- vim.opt.smartcase = false
 -- vim.opt.hlsearch = false
-vim.opt.incsearch = true
 
 -- neotree
 vim.keymap.set("n", "<leader>nn", ":Neotree toggle<CR>", { desc = "Abrir Neo-tree" })
@@ -42,10 +43,6 @@ vim.opt.wrap = false -- Não quebra linhas
 vim.opt.linebreak = true -- Quebra em palavras quando wrap for ativado
 vim.opt.showbreak = "↪ " -- Símbolo para quebras
 vim.opt.sidescroll = 5 -- Scroll horizontal suave
--- vim.opt.listchars:append({
---   extends = "›", -- Indicador de continuação à direita
---   precedes = "‹", -- Indicador de continuação à esquerda
--- })
 
 vim.keymap.set("n", "zl", "5zl", { desc = "Scroll horizontal para esquerda" })
 vim.keymap.set("n", "zh", "5zh", { desc = "Scroll horizontal para direita" })
