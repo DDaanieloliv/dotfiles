@@ -307,6 +307,7 @@
     lua-language-server
     lm_sensors
 		maven
+		pipes
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
       home="$HOME"
