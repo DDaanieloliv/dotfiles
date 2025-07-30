@@ -1,6 +1,6 @@
 require("config.lazy")
 
-local buffer_manager = require("config.buffer-manager")
+local buffer_manager = require("plugins.buffet.buffer-manager")
 
 -- Inicializa o módulo
 buffer_manager.setup()
