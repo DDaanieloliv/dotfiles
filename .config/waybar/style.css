@@ -2,12 +2,12 @@
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: 'SF Pro Text', 'JetBrainsMono Nerd Font Propo', sans-serif;
     font-weight: bold;
-    font-size: 12.95px;
+    font-size: 12px;
     border-radius: 10px;
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0);
+    background-color: rgba(30, 26, 22, 1);
 /*  border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
     color: #ffffff;
     transition-property: background-color;
@@ -37,9 +37,11 @@ window#waybar.chromium {
 }
 
 #custom-power {
-    background-color: #3C494F;
+    /* background-color: #3C494F; */
+	  background-color: rgba(121, 78, 38, 0.8);
     color: #d4babb;
-    margin-bottom: 14px;
+		margin-bottom: 4px;
+		margin-top: 4px;
     padding-bottom: 1px;
 }
 
@@ -68,6 +70,8 @@ button:hover {
 
 #workspaces {
     background-color: #323d49;
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #workspaces button {
@@ -75,7 +79,10 @@ button:hover {
     transition: 0.2s ease-in-out;
     padding: 0 7px;
     background-color: transparent;
-    color: #6cbde9;
+    /* color: #6cbde9; */
+    color: rgba(108, 189, 233, 1);
+		/* margin-bottom: 4px; */
+			/* margin-top: 4px; */
 }
 
 #workspaces button:hover {
@@ -104,7 +111,8 @@ button:hover {
 }
 
 #mode {
-    background-color: #64727D;
+    /* background-color: #64727D; */
+	  background-color: rgba(121, 78, 38, 0.8);
     box-shadow: inset 0 -3px #ffffff;
 }
 
@@ -128,13 +136,16 @@ button:hover {
     padding: 0 10px;
     color: #ffffff;
     margin: 0 3px;
-    margin-bottom: 14px;
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #window,
 #workspaces {
     margin: 0 10px;
-    margin-bottom: 14px;
+		margin-bottom: 4px;
+		margin-top: 4px;
+	  background-color: rgba(121, 78, 38, 0.8);
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -148,14 +159,18 @@ button:hover {
 }
 
 #clock {
-    background-color: #64727D;
-    margin-bottom: 14px;
+    /* background-color: #64727D; */
+	  background-color: rgba(121, 78, 38, 0.8);
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #battery {
-    background-color: #3C494F;
+    /* background-color: #3C494F; */
+	  background-color: rgba(121, 78, 38, 0.8);
     color: #ffffff;
-    margin-bottom: 14px;
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #battery.charging, #battery.plugged {
@@ -218,12 +233,17 @@ label:focus {
 }
 
 #backlight {
-    background-color: #3C494F;
-    margin-bottom: 14px;
+    /* background-color: #3C494F; */
+	  background-color: rgba(121, 78, 38, 0.8);
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #network {
-    background-color: #3C494F;
+    /* background-color: #3C494F; */
+	  background-color: rgba(121, 78, 38, 0.8);
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #network.disconnected {
@@ -231,9 +251,11 @@ label:focus {
 }
 
 #pulseaudio {
-    background-color: #3C494F;
+	  background-color: rgba(121, 78, 38, 0.8);
+    /* background-color: #3C494F; */
     color: #ffffff;
-    margin-bottom: 14px;
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #pulseaudio.muted {
@@ -251,10 +273,13 @@ label:focus {
 }
 
 #custom-media {
-    background-color: #3C494F /* #66cc99 */;
+    /* background-color: #3C494F  #66cc99 ; */
+	  background-color: rgba(121, 78, 38, 0.8);
     color: #ffffff;
     min-width: 100px;
     padding-top: 3px;
+		margin-bottom: 4px;
+		margin-top: 4px;
 }
 
 #custom-media.custom-spotify {

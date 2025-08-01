@@ -2,10 +2,12 @@
 {
     // "layer": "top", // Waybar at top layer
     // "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 35, // Waybar height (to be removed for auto height)
-    "width": 1330, // Waybar width
-    "margin-top": 0,
-    "margin-bottom": -20,
+    // "height": 3, // Waybar height (to be removed for auto height)
+		"height": 3, // Mantenha este valor
+    "width": 1530, // Waybar width
+    "margin-top": 2,
+		// "padding": 5,
+    // "margin-bottom": -5,
     "spacing": 4, // Gaps between modules (4px)
     // Choose the order of the modules
     "modules-left": [
@@ -37,6 +39,7 @@
     ],
     // Modules configuration
     "hyprland/workspaces": {
+	// "format": "{name}, {icon}",
 	"format": "{name}",
 	"format-icons": {
 		"1": "",
