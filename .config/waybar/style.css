@@ -2,17 +2,17 @@
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: 'SF Pro Text', 'JetBrainsMono Nerd Font Propo', sans-serif;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 12px;
     border-radius: 8px;
 }
 
 window#waybar {
-    /* background-color: rgba(30, 26, 22, 1); */
+    background-color: rgba(16, 14, 12, 1);
 	  /* border-bottom: 3px solid rgba(100, 114, 125, 0.5); */
     color: #ffffff;
     transition-property: background-color;
     transition-duration: .5s;
-    border-radius: 13px;
+    /* border-radius: 18px; */
 }
 
 window#waybar.hidden {
@@ -39,10 +39,11 @@ window#waybar.chromium {
 
 #custom-power {
     /* background-color: #3C494F; */
-	  background-color: rgba(121, 78, 38, 0.8);
+	  /* background-color: rgba(121, 78, 38, 0.8); */
     color: #d4babb;
-		margin-bottom: 4px;
-		margin-top: 4px;
+		margin-bottom: 0px;
+		/* margin-top: 4px; */
+		margin-top: 38px;
     padding-bottom: 1px;
     margin-right: 20px;
 }
@@ -71,20 +72,27 @@ button:hover {
 }
 
 #workspaces {
-    background-color: #323d49;
-		margin-bottom: 4px;
-		margin-top: 4px;
+    /* background-color: #323d49; */
+		/* margin-bottom: 4px; */
+    padding: 0 0 0 0;
+		/* margin-top: 4px; */
+		/* margin-top: 18px; */
 }
 
 #workspaces button {
     border-radius: 6px;
     transition: 0.2s ease-in-out;
-    padding: 0 7px;
-    background-color: transparent;
+    /* padding: 0 5px 0 5px; */
+    /* background-color: transparent; */
     /* color: #6cbde9; */
     color: rgba(108, 189, 233, 1);
 		/* margin-bottom: 4px; */
-			/* margin-top: 4px; */
+		/* margin-top: 4px; */
+
+
+    padding: 0 5px;
+    background-color: transparent;
+    color: #ffffff;
 }
 
 #workspaces button:hover {
@@ -103,6 +111,7 @@ button:hover {
 #workspaces button.active {
     background-color: #6cbde9;
     color: #323d49;
+    padding: 0 10px 0 10px;
 }
 #workspaces button.empty {
     color: #e8eaed;
@@ -134,15 +143,20 @@ button:hover {
     color: #ffffff;
     margin: 0 3px;
 		margin-bottom: 4px;
-		margin-top: 4px;
+		/* margin-top: 4px; */
+		/* margin-top: 10px; */
 }
 
 #window,
 #workspaces {
-    margin: 0 10px;
-		margin-bottom: 4px;
-		margin-top: 4px;
-	  background-color: rgba(121, 78, 38, 0.8);
+		/* border: 1px solid #000; */
+  /*   margin: 0 10px; */
+		/* margin-bottom: -5px; */
+		/* margin-top: 4px; */
+		/* margin-top: 30px; */
+	  /* background-color: rgba(121, 78, 38, 0.8); */
+
+    margin: 40px 10px 0px 4px;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -157,17 +171,19 @@ button:hover {
 
 #clock {
     /* background-color: #64727D; */
-	  background-color: rgba(121, 78, 38, 0.8);
-		margin-bottom: 4px;
-		margin-top: 4px;
+	  /* background-color: rgba(121, 78, 38, 0.8); */
+		margin-bottom: 0px;
+		/* margin-top: 4px; */
+		margin-top: 38px;
 }
 
 #battery {
     /* background-color: #3C494F; */
-	  background-color: rgba(121, 78, 38, 0.8);
+	  /* background-color: rgba(121, 78, 38, 0.8); */
     color: #ffffff;
-		margin-bottom: 4px;
-		margin-top: 4px;
+		margin-bottom: 0px;
+		/* margin-top: 4px; */
+		margin-top: 38px;
 }
 
 #battery.charging, #battery.plugged {
@@ -195,16 +211,18 @@ button:hover {
 
 #backlight {
 	/* background-color: #3C494F; */
-	background-color: rgba(121, 78, 38, 0.8);
-	margin-bottom: 4px;
-	margin-top: 4px;
+	/* background-color: rgba(121, 78, 38, 0.8); */
+	margin-bottom: 0px;
+	/* margin-top: 4px; */
+	margin-top: 38px;
 }
 
 #network {
 	/* background-color: #3C494F; */
-	background-color: rgba(121, 78, 38, 0.8);
-	margin-bottom: 4px;
-	margin-top: 4px;
+	/* background-color: rgba(121, 78, 38, 0.8); */
+	margin-bottom: 0px;
+	/* margin-top: 4px; */
+	margin-top: 38px;
 }
 
 #network.disconnected {
@@ -212,11 +230,12 @@ button:hover {
 }
 
 #pulseaudio {
-	background-color: rgba(121, 78, 38, 0.8);
+	/* background-color: rgba(121, 78, 38, 0.8); */
 	/* background-color: #3C494F; */
 	color: #ffffff;
-	margin-bottom: 4px;
-	margin-top: 4px;
+	margin-bottom: 0px;
+	/* margin-top: 4px; */
+	margin-top: 38px;
 }
 
 #pulseaudio.muted {
@@ -235,12 +254,13 @@ button:hover {
 
 #custom-media {
 	/* background-color: #3C494F  #66cc99 ; */
-	background-color: rgba(121, 78, 38, 0.8);
+	/* background-color: rgba(121, 78, 38, 0.8); */
 	color: #ffffff;
 	min-width: 100px;
 	padding-top: 3px;
-	margin-bottom: 4px;
-	margin-top: 4px;
+	margin-bottom: 0px;
+	/* margin-top: 4px; */
+	margin-top: 38px;
 }
 
 #mode {

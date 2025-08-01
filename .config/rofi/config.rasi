@@ -39,7 +39,7 @@ configuration {
     urgent-foreground:           var(background);
     active-background:           var(active);
     active-foreground:           var(background);
-    selected-normal-background:  #c9c7b314;/* var(selected); */
+    selected-normal-background:  #c9c7b304;/* var(selected); */
     selected-normal-foreground:  var(foreground);
     selected-urgent-background:  var(active);
     selected-urgent-foreground:  var(background);
@@ -142,18 +142,18 @@ entry {
     enabled:                     true;
     padding:                     0px 2px -2px 20px;
     expand:                      false;
-    width:                       8em;
+    width:                       6em;
     min-width:                   20em;
 
     border:                      1px;
     border-color:                #3c4752;
-    background-color:            #332d3d;
-    margin:                      10px 4px 10px 10px;
+    // background-color:            #332d3d;
+    margin:                      10px 4px 10px -4px;
     border-radius:               4px;
 
     text-color:                  inherit;
     cursor:                      text;
-    placeholder:                 "  search...";
+		placeholder:                 " Search.  ";
     placeholder-color:           inherit;
 }
 num-filtered-rows {
