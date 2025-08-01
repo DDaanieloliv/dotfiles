@@ -331,6 +331,7 @@
     xclip
     lua-language-server
     lm_sensors
+		pipes
     maven
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
