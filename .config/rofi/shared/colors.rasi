@@ -8,8 +8,8 @@
 
 * {
     // background:     #3C494FFF;
-		background:     #100e0cFF;
-		background:     #211F1FFF;
+		// background:     #100e0cFF;
+		background:     #211F1F00;
     background-alt: #101010FF;
     foreground:     #FFFFFFFF;
     selected:       #62AEEFFF;

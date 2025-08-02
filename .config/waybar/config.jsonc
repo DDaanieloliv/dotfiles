@@ -14,8 +14,8 @@
     "modules-left": [
         "hyprland/workspaces",
 //      "custom/power",
-        "custom/media",
-        "network"
+        "custom/media"
+        // "network"
     ],
     "modules-center": [
         "sway/window"
@@ -24,6 +24,7 @@
     "modules-right": [
         "mpd",
 //      "idle_inhibitor",
+        "network",
         "pulseaudio",
 //      "network",
         "power-profiles-daemon",
@@ -118,7 +119,7 @@
 //  },
     "clock": {
         "timezone": "America/Recife",
-	"format": " {:%H:%M}",
+				"format": " {:%H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "{:%Y-%m-%d}"
     },
@@ -139,7 +140,7 @@
 //  },
     "backlight": {
         // "device": "acpi_video1",
-        "format": "{percent}% {icon}",
+        "format": " {icon} {percent}% ",
         "format-icons": ["", "", "", "", "", "", "", "", ""]
     },
     "battery": {
@@ -148,11 +149,14 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%",
-        "format-full": "{icon} {capacity}%",
+        // "format": "{icon} {capacity}%",
+        // "format-full": "{icon} {capacity}%",
+        "format": " {icon} ",
+        "format-full": " {icon} ",
         "format-charging": "  {capacity}%",
         "format-plugged": "   {capacity}%",
         "format-alt": "{time} {icon}",
+				"tooltip-format": "󰂄 Battery: {capacity}%",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         "format-icons": ["", "", "", "", ""]
@@ -173,22 +177,35 @@
 //  },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "󰤨 {signalStrength}%",
+        // "format-wifi": "󰤨 {signalStrength}%   ",
+        "format-wifi": "󰤨 ",
+				"tooltip-format": "󰀂 {essid}\n󰣸 Sinal: {signalStrength}%\n󰩟 : {ipaddr}\n{ifname} via {gwaddr} ",
         "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
+        // "tooltip-format": "{ifname} via {gwaddr} ",
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+				"format-icons": {
+								"disconnected": "⚠",
+								"ethernet": "",
+								"wifi": [
+										"󰤯",  // 0-20%
+										"󰤟",  // 20-40%
+										"󰤢",  // 40-60%
+										"󰤥",  // 60-80%
+										"󰤨"   // 80-100%
+								]
+						}
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format": "{icon} {volume}% {format_source}",
+        "format-bluetooth": "{icon} {volume}% {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
         "format-muted": " {format_source}",
-        "format-source": " ",
+        "format-source": "     ",
         // "format-source": "{volume}% ",
-        "format-source-muted": "  ",
+        "format-source-muted": "    ",
         "format-icons": {
             "headphone": "",
             "hands-free": "",

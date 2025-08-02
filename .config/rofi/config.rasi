@@ -39,7 +39,7 @@ configuration {
     urgent-foreground:           var(background);
     active-background:           var(active);
     active-foreground:           var(background);
-    selected-normal-background:  #c9c7b304;/* var(selected); */
+    selected-normal-background:  #c9c7b344;/* var(selected); */
     selected-normal-foreground:  var(foreground);
     selected-urgent-background:  var(active);
     selected-urgent-foreground:  var(background);
@@ -59,6 +59,8 @@ window {
     transparency:                "real";
     location:                    south;
     anchor:                      south;
+    // location:                    north;
+    // anchor:                      north;
     fullscreen:                  false;
     width:                       100%;
  /* height:                      10%;  */
@@ -125,7 +127,7 @@ inputbar {
 }
 
 prompt {
-    enabled:                     true;
+    enabled:                     false;
     padding:                     0px 10px 0px 10px;
     background-color:            inherit;
     text-color:                  #00000000;
@@ -139,7 +141,7 @@ textbox-prompt-colon {
     text-color:                  inherit;
 }
 entry {
-    enabled:                     true;
+    enabled:                     false;
     padding:                     0px 2px -2px 20px;
     expand:                      false;
     width:                       6em;

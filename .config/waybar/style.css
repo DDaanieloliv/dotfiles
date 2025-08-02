@@ -38,6 +38,26 @@ window#waybar.chromium {
     border: none;
 }
 
+tooltip {
+     border-radius: 4px;
+     background-color: #23201F;
+}
+
+
+/* tooltip { */
+/* background-color: transparent; */
+/* border: none; */
+/* } */
+/**/
+/* tooltip label { */
+/* background-color: #color; */
+/* color: #color; */
+/* border-radius: ##px; */
+/* border: style ##px #color; */
+/* margin: ##px; */
+/* } */
+
+
 #custom-power {
     /* background-color: #3C494F; */
 	  /* background-color: rgba(121, 78, 38, 0.8); */
@@ -84,16 +104,16 @@ button:hover {
     border-radius: 6px;
     transition: 0.2s ease-in-out;
     /* padding: 0 5px 0 5px; */
-    /* background-color: transparent; */
-    /* color: #6cbde9; */
-    color: rgba(108, 189, 233, 1);
+    background-color: transparent;
+    color: #6cbde9;
+    /* color: rgba(108, 189, 233, 1); */
 		/* margin-bottom: 4px; */
 		/* margin-top: 4px; */
 
 
     padding: 0 5px;
     background-color: transparent;
-    color: #ffffff;
+    color: #6cbde9;
 }
 
 #workspaces button:hover {
