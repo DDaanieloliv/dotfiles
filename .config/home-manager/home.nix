@@ -188,10 +188,10 @@
       			bind-key r source-file ~/.config/tmux/tmux.conf \; run-shell "tmux move-window -r"
 
             # Binds alternativos
-            bind -n M-Left resize-pane -L 1   # Alt+Left
-            bind -n M-Right resize-pane -R 1  # Alt+Right
-            bind -n M-Down resize-pane -D 1   # Alt+Down
-            bind -n M-Up resize-pane -U 1     # Alt+Up
+            bind -n M-h resize-pane -L 1   # Alt+Left
+            bind -n M-l resize-pane -R 1  # Alt+Right
+            bind -n M-j resize-pane -D 1   # Alt+Down
+            bind -n M-k resize-pane -U 1     # Alt+Up
 
             bind -n C-h select-pane -L
             bind -n C-j select-pane -D
