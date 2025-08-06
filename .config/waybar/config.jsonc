@@ -121,7 +121,7 @@
         "timezone": "America/Recife",
 				"format": " {:%H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
+        "format-alt": " {:%Y-%m-%d}"
     },
 //  "cpu": {
 //      "format": "{usage}% ",
@@ -159,7 +159,8 @@
 				"tooltip-format": "󰂄 Battery: {capacity}%",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+        // "format-icons": ["", "", "", "", ""]
     },
     "battery#bat2": {
         "bat": "BAT2"
@@ -233,7 +234,7 @@
 	// To the applet works you should use that command 'chmod +x ~/.config/waybar/mediaplayer.py', to turn mediaplayer.py executable. And also have 'playerctl' and 'Python3'.
     },
     "custom/power": {
-        "format": " ⏻ ",
+        "format": "  ",
         "tooltip": false,
         "on-click": "/home/daniel/.config/waybar/scripts/powermenu.sh"
     }

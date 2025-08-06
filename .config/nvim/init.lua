@@ -135,10 +135,10 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Move lines up/down
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+vim.keymap.set("n", "<C-A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<C-A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<C-A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<C-A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 
 -- Adiciona TAB nas linhas selecionadas (modo visual)
@@ -156,7 +156,7 @@ vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease wi
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
 -- Adding sens to the 'J'
-vim.keymap.set("n", "<A-j>", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
+vim.keymap.set("n", "<leader>j", ":call append(line('.')-1, '')<CR>", { desc = "Add empty line above" })
 
 -- Abre lista de diagnósticos e permite copiar
 vim.keymap.set("n", "<leader>ld", function()
