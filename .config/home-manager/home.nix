@@ -15,8 +15,15 @@
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
+
+	home.sessionVariables = {
+		# EDITOR = "emacs";
+		PATH = "$HOME/.npm-global/bin:$PATH";
+	};
+
   programs.bash = {
     enable = true;
+		historyControl = [ "ignoredups" "erasedups" ];
     shellAliases = {
       btw = "echo I_use 󱄅 BTW";
       vim = "nvim";
@@ -33,6 +40,10 @@
             #     tmux attach -t main || tmux new -s main
             #   fi
             # fi
+
+						if [ -d "$HOME/.npm-global/bin" ]; then
+							export PATH="$HOME/.npm-global/bin:$PATH"
+						fi
 
       			# enable color support of ls and also add handy aliases
       			if [ -x /usr/bin/dircolors ]; then
@@ -474,9 +485,6 @@
   #
   #  /etc/profiles/per-user/daniel/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
