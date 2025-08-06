@@ -64,7 +64,7 @@ tooltip {
     color: #d4babb;
 		margin-bottom: 0px;
 		/* margin-top: 4px; */
-		margin-top: 38px;
+		/* margin-top: 38px; */
     padding-bottom: 1px;
     margin-right: 20px;
 }
@@ -177,7 +177,7 @@ button:hover {
 		/* margin-top: 30px; */
 	  /* background-color: rgba(121, 78, 38, 0.8); */
 
-    margin: 40px 10px 0px 4px;
+    margin: 0px 10px 0px 4px;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -195,7 +195,7 @@ button:hover {
 	  /* background-color: rgba(121, 78, 38, 0.8); */
 		margin-bottom: 0px;
 		/* margin-top: 4px; */
-		margin-top: 38px;
+		/* margin-top: 38px; */
 }
 
 #battery {
@@ -204,7 +204,7 @@ button:hover {
     color: #ffffff;
 		margin-bottom: 0px;
 		/* margin-top: 4px; */
-		margin-top: 38px;
+		/* margin-top: 38px; */
 }
 
 #battery.charging, #battery.plugged {
@@ -235,7 +235,7 @@ button:hover {
 	/* background-color: rgba(121, 78, 38, 0.8); */
 	margin-bottom: 0px;
 	/* margin-top: 4px; */
-	margin-top: 38px;
+	/* margin-top: 38px; */
 }
 
 #network {
@@ -243,7 +243,7 @@ button:hover {
 	/* background-color: rgba(121, 78, 38, 0.8); */
 	margin-bottom: 0px;
 	/* margin-top: 4px; */
-	margin-top: 38px;
+	/* margin-top: 38px; */
 }
 
 #network.disconnected {
@@ -256,7 +256,7 @@ button:hover {
 	color: #ffffff;
 	margin-bottom: 0px;
 	/* margin-top: 4px; */
-	margin-top: 38px;
+	/* margin-top: 38px; */
 }
 
 #pulseaudio.muted {
@@ -281,7 +281,7 @@ button:hover {
 	padding-top: 3px;
 	margin-bottom: 0px;
 	/* margin-top: 4px; */
-	margin-top: 38px;
+	/* margin-top: 38px; */
 }
 
 #mode {
