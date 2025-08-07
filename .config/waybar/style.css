@@ -162,8 +162,8 @@ button:hover {
 #mpd {
     padding: 0 10px;
     color: #ffffff;
-    margin: 0 3px;
-		margin-bottom: 4px;
+    /* margin: 0 3px; */
+		/* margin-bottom: 4px; */
 		/* margin-top: 4px; */
 		/* margin-top: 10px; */
 }
@@ -273,12 +273,21 @@ button:hover {
 	background-color: #f53c3c;
 }
 
+#custom-next-media {
+	margin-left: 8px;
+}
+
+#custom-prev-media {
+	margin-left: 20px;
+	margin-right: 2px;
+}
+
 #custom-media {
 	/* background-color: #3C494F  #66cc99 ; */
 	/* background-color: rgba(121, 78, 38, 0.8); */
 	color: #ffffff;
 	min-width: 100px;
-	padding-top: 3px;
+	/* padding-top: 3px; */
 	margin-bottom: 0px;
 	/* margin-top: 4px; */
 	/* margin-top: 38px; */

@@ -14,8 +14,9 @@
     "modules-left": [
         "hyprland/workspaces",
 //      "custom/power",
-        "custom/media"
-        // "network"
+				"custom/prev-media",  // Botão "Voltar"
+				"custom/media",       // Exibição da música atual      // "network"
+				"custom/next-media"  // Botão "Avançar"
     ],
     "modules-center": [
         "sway/window"
@@ -57,15 +58,6 @@
              "eDP-1": 5// but only three on HDMI-A-1
        }
     },
-//  "keyboard-state": {
-//      "numlock": true,
-//      "capslock": true,
-//      "format": "{name} {icon}",
-//      "format-icons": {
-//          "locked": "",
-//          "unlocked": ""
-//      }
-//  },
 //  "sway/mode": {
 //      "format": "<span style=\"italic\">{}</span>"
 //  },
@@ -75,39 +67,6 @@
 //      "format-icons": ["", ""],
 //      "tooltip": true,
 //      "tooltip-format": "{app}: {title}"
-//  },
-//  "mpd": {
-//      "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
-//      "format-disconnected": "Disconnected ",
-//      "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
-//      "unknown-tag": "N/A",
-//      "interval": 5,
-//      "consume-icons": {
-//          "on": " "
-//      },
-//      "random-icons": {
-//          "off": "<span color=\"#f53c3c\"></span> ",
-//          "on": " "
-//      },
-//      "repeat-icons": {
-//          "on": " "
-//      },
-//      "single-icons": {
-//          "on": "1 "
-//      },
-//      "state-icons": {
-//          "paused": "",
-//          "playing": ""
-//      },
-//      "tooltip-format": "MPD (connected)",
-//      "tooltip-format-disconnected": "MPD (disconnected)"
-//  },
-//  "idle_inhibitor": {
-//      "format": "{icon}",
-//      "format-icons": {
-//          "activated": "",
-//          "deactivated": ""
-//      }
 //  },
 //  "tray": {
 //      // "icon-size": 21,
@@ -218,21 +177,33 @@
         },
         "on-click": "pavucontrol"
     },
-    "custom/media": {
-        "format": "{icon} {text}",
-        "return-type": "json",
-        "max-length": 40,
-        "interval": 1, // atualiza a cada 2 segundos
-        "format-icons": {
-            "spotify": "",
-            "default": "🎜"
-        },
-        "escape": true,
-        "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
-	//
-	// To the applet works you should use that command 'chmod +x ~/.config/waybar/mediaplayer.py', to turn mediaplayer.py executable. And also have 'playerctl' and 'Python3'.
-    },
+		// Configuração dos botões:
+		"custom/prev-media": {
+				"format": "⏮",
+				"on-click": "playerctl previous",
+				"tooltip": false,
+				"on-click-right": "playerctl position 5-"  // Retrocede 5 segundos (opcional)
+		},
+		"custom/next-media": {
+				"format": "⏭",
+				"on-click": "playerctl next",
+				"tooltip": false,
+				"on-click-right": "playerctl position 5+"  // Avança 5 segundos (opcional)
+		},
+		"custom/media": {
+				"format": "{icon} {text}",
+				"return-type": "json",
+				"exec": "~/.config/waybar/scripts/mediaplayer.py",
+				"max-length": 40,
+				"interval": 1,
+				"format-icons": {
+						"Playing": "  ",
+						"Paused": "  ",
+						"Stopped": "  ",
+						"spotify": "  "
+				},
+				"on-click": "playerctl play-pause"
+		},
     "custom/power": {
         "format": "  ",
         "tooltip": false,
