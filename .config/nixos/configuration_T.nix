@@ -13,7 +13,7 @@
   # Use the systemd-boot EFI boot loader.
   #boot.loader.systemd-boot.enable = true;
   #boot.loader.efi.canTouchEfiVariables = true;
-  
+
   boot.loader = {
     grub = {
       enable = true;
@@ -26,7 +26,7 @@
       efiSysMountPoint = "/boot/efi";
     };
   };
- 
+
   networking.hostName = "nixbtw"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -52,7 +52,7 @@
 
   # Enable WM / "DE" hyperland.
   programs.hyprland.enable = true;
-  
+
   # Enable Supergfxctl for ASUS laptops.
   services.supergfxd.enable = true;
 
@@ -94,35 +94,43 @@
     ];
   };
 
-  programs.firefox.enable = true;
+        programs.firefox.enable = true;
 
   nixpkgs.config.allowUnfree = true;
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    git
     wget
     neovim
     kitty
     hyprland
+    bibata-cursors
     xdg-user-dirs
     neofetch
     swww
     rofi-wayland
     waybar
     kdePackages.dolphin
-    jetbrains.idea-community 
+    vscode
+    maven
     playerctl
     python3
     peaclock
     nvtopPackages.intel
-    jdk17
+    jdk21
     unzip
     gcc
     eww
     hyprpicker
+    wl-clipboard
+    gthumb
+    nodejs_22
+    #nodePackages_latest."@angular/cli"
+    cargo
   ];
-  
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
@@ -134,6 +142,7 @@
   environment.variables = {
   };
 
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -179,4 +188,5 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
+
 
