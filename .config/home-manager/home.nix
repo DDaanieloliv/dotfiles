@@ -242,46 +242,52 @@
       			bind-key -T copy-mode-vi Escape send-keys -X cancel
 
 
-      			#set-option -g status-justify centre
+      			set-option -g status-justify centre
       			set-option -g status-position top
       			set-option -g status-left-length 100
-      			set-option -g status-right-length 100
-      			set-option -g status-right-style bg=default,fg=white
-      			set-option -g status-left-style bg=default,fg=white
+      			# set-option -g status-right-length 100
+      			# set-option -g status-right-style bg=default,fg=white
+      			# set-option -g status-left-style bg=default,fg=white
       			set -g status-style bg=default,fg=white
 
-      			set -g window-status-format "\
-      				#[bg=default,fg=#342838]\uE0B6\
-      				#[bg=#342838,fg=white]#W \
-      				#[bg=colour223, fg=black] #I\
-      				#[bg=default,fg=colour223]\uE0B4 "
+						set -g window-status-format " #[bg=default ,fg=grey]  #[bg=default, fg=grey] #I 󰜥 #W 󰜥 "
+						set -g window-status-current-format " #[bg=default,fg=#5FC3BC]  #[bg=default,fg=white]#I  #[bg=default,fg=white]#W  "
 
-      			set -g window-status-current-format "\
-      				#[bg=default,fg=#342838]\uE0B6\
-      				#[bg=#342838,fg=white] #W \
-      				#[bg=#e3a1a1, fg=black] #I\
-      				#[bg=default,fg=#e3a1a1]\uE0B4 "
+      			# set -g window-status-format "\
+      			# 	#[bg=default,fg=#342838]\uE0B6\
+      			# 	#[bg=#342838,fg=white]#W \
+      			# 	#[bg=colour223, fg=black] #I\
+      			# 	#[bg=default,fg=colour223]\uE0B4 "
 
-      			set -g status-left "\
-      				#[bg=default, fg=green]\uE0B6\
-      				#[bg=green,fg=black] \
-      				#[fg=white,bg=#342838] #S\
-      				#[bg=default,fg=#342838]\uE0B4  "
+      			# set -g window-status-current-format "\
+      			# 	#[bg=default,fg=#342838]\uE0B6\
+      			# 	#[bg=#342838,fg=white] #W \
+      			# 	#[bg=#e3a1a1, fg=black] #I\
+      			# 	#[bg=default,fg=#e3a1a1]\uE0B4 "
 
 
-      			set -g status-right "\
-      				#[bg=default,fg=#f77ee5]\uE0B6\
-      				#[bg=#f77ee5,fg=black] \
-      				#[fg=white,bg=#342838] #(short-path #{pane_current_path})\
-      				#[bg=default,fg=#342838]\uE0B4  \
-      				#[bg=default,fg=blue]\uE0B6\
-      				#[bg=blue,fg=black]󰸘 \
-      				#[bg=#342838,fg=white] %d\
-      				#[bg=default,fg=#342838]\uE0B4  \
-      				#[bg=default,fg=blue]\uE0B6\
-      				#[bg=blue, fg=black]󰃰 \
-      				#[bg=#342838, fg=white] %H:%M\
-      				#[bg=default,fg=#342838]\uE0B4"
+						set -g status-left ""
+						# set -g status-left "#[bg=#6993EF, fg=black] 󰄰 bash [#S]"
+      			# set -g status-left "\
+      			# 	#[bg=default, fg=green]\uE0B6\
+      			# 	#[bg=green,fg=black] \
+      			# 	#[fg=white,bg=#342838] #S\
+      			# 	#[bg=default,fg=#342838]\uE0B4  "
+
+						set -g status-right ""
+      			# set -g status-right "\
+      			# 	#[bg=default,fg=#f77ee5]\uE0B6\
+      			# 	#[bg=#f77ee5,fg=black] \
+      			# 	#[fg=white,bg=#342838] #(short-path #{pane_current_path})\
+      			# 	#[bg=default,fg=#342838]\uE0B4  \
+      			# 	#[bg=default,fg=blue]\uE0B6\
+      			# 	#[bg=blue,fg=black]󰸘 \
+      			# 	#[bg=#342838,fg=white] %d\
+      			# 	#[bg=default,fg=#342838]\uE0B4  \
+      			# 	#[bg=default,fg=blue]\uE0B6\
+      			# 	#[bg=blue, fg=black]󰃰 \
+      			# 	#[bg=#342838, fg=white] %H:%M\
+      			# 	#[bg=default,fg=#342838]\uE0B4"
 
     '';
   };
@@ -339,7 +345,7 @@
     tree
     nitch
     ripgrep
-    xclip
+    # xclip
     lua-language-server
     lm_sensors
 		pipes
