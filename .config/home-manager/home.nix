@@ -21,6 +21,20 @@
 		PATH = "$HOME/.npm-global/bin:$PATH";
 	};
 
+
+
+  # # Enable Supergfxctl for ASUS laptops.
+  # services.supergfxd.enable = true;
+  #
+  # # Enable asusctl and ROG Control Center.
+  # services = {
+  #   asusd = {
+  #     enable = true;
+  #     enableUserService = true;
+  #   };
+  # };
+
+
   programs.bash = {
     enable = true;
 		historyControl = [ "ignoredups" "erasedups" ];
@@ -40,6 +54,33 @@
             #     tmux attach -t main || tmux new -s main
             #   fi
             # fi
+
+						# Configurações para LLVM/Clang (condicional)
+						if [ -d "/usr/lib" ]; then
+								# Verifica se libclang existe antes de configurar
+								if [ -f "/usr/lib/libclang.so" ] || [ -f "/usr/lib/libclang.so.20" ]; then
+										export LIBCLANG_PATH=/usr/lib
+										export LLVM_SYS_120_PREFIX=/usr
+								elif [ -f "/usr/lib64/libclang.so" ]; then
+										# Alternativa para sistemas com lib64
+										export LIBCLANG_PATH=/usr/lib64
+										export LLVM_SYS_120_PREFIX=/usr
+								fi
+						fi
+
+						#
+						# ~/.bashrc
+						#
+
+						# If not running interactively, don't do anything
+						[[ $- != *i* ]] && return
+
+						# Load Home Manager environment variables
+						. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
+						alias ls='ls --color=auto'
+						alias grep='grep --color=auto'
+
 
 						if [ -d "$HOME/.npm-global/bin" ]; then
 							export PATH="$HOME/.npm-global/bin:$PATH"
@@ -292,6 +333,7 @@
     '';
   };
 
+
   programs.git = {
     enable = true;
     userName = "ddaaniel";
@@ -331,14 +373,12 @@
     nerd-fonts.fira-code
     nerd-fonts.hack
     nerd-fonts.jetbrains-mono
+		font-awesome
 
     # Outras fontes e pacotes
-    font-awesome
-    noto-fonts
-    noto-fonts-emoji
+    # noto-fonts
+    # noto-fonts-emoji
 
-    mesa # Já inclui OpenGL e Vulkan
-    libva-utils # Para vainfo
     htop
     cava
     chafa
@@ -348,8 +388,22 @@
     # xclip
     lua-language-server
     lm_sensors
-		pipes
+    bibata-cursors
+    hyprpicker
+    playerctl
+    python3
+    swww
+    wl-clipboard
+    pipes
     maven
+    waybar
+		gcc
+		cargo
+		libclang  # Versão específica
+		llvm
+		cmake
+		nodejs_22
+    rofi-wayland
     (pkgs.writeShellScriptBin "short-path" ''
       path="''${1:-$PWD}"
       home="$HOME"
@@ -407,6 +461,7 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
